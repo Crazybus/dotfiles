@@ -1,0 +1,82 @@
+#!/usr/bin/env python2
+
+import os
+import subprocess
+import sys
+
+diff = False
+file_num = None
+
+if len(sys.argv) > 1:
+    if sys.argv[1] in ['diff', 'd']:
+        diff = True
+    if sys.argv[1].isdigit():
+        file_num = int(sys.argv[1])
+    elif len(sys.argv) > 2:
+        if sys.argv[2].isdigit():
+            file_num = int(sys.argv[2])
+
+blue = '\033[0;34m'
+cyan = '\033[0;36m'
+pink = '\033[0;35m'
+orange = '\033[0;33m'
+yellow = '\033[0;32m'
+red = '\033[0;31m'
+end = '\033[0m'
+bold = '\033[1m'
+
+projects = '/Users/mick/pro'
+
+counter = 1
+
+def cmd(command):
+    return subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout.read()
+
+def clean_diff(diff):
+    found = False
+    output_diff = ""
+    for line in diff.split('\n'):
+        if line.startswith('@@'):
+            found = True
+            continue
+        if found:
+            if line.startswith('+'):
+                line = line[1::]
+                colour = yellow
+            elif line.startswith('-'):
+                line = line[1::]
+                colour = ''
+            else:
+                colour = ''
+            output_diff += '    ' + colour + line + end + '\n'
+    return output_diff
+
+output_text = ''
+for project in os.listdir(projects):
+    full_path = os.path.join(projects,project)
+    if os.path.isdir(full_path) and os.path.exists(os.path.join(full_path,'.git')):
+        os.chdir(full_path)
+        output = cmd('git status -s').split('\n')
+        if len(output) > 1:
+            output_text += blue + bold + project + end + '\n'
+            for line in output[:-1]:
+                status = line.split()[0]
+                path = line.split()[1]
+                if status == 'M':
+                    colour = blue
+                elif status == '??':
+                    colour  = cyan
+                elif status == 'D':
+                    colour  = ''
+                else:
+                    colour = yellow + status
+                if file_num:
+                    if file_num == counter:
+                        os.system('vim ' + os.path.join(full_path,path))
+                output_text += '  ' + str(counter) + ':' + colour + path + end + '\n'
+                counter += 1
+                if diff and status == 'M':
+                    output_text += clean_diff(cmd('git diff -U0 ' + path))
+
+if not file_num:
+    print output_text.strip('\n')

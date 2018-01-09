@@ -1,0 +1,43 @@
+[include]
+    path = ~/.gitconfig.local
+[diff]
+    tool = icdiff
+[difftool]
+    prompt = false
+[difftool "icdiff"]
+  cmd = /usr/local/bin/icdiff --line-numbers $LOCAL $REMOTE
+[push]
+	default = nothing
+    followTags = true
+[filter "lfs"]
+	smudge = git-lfs smudge %f
+	required = true
+	clean = git-lfs clean %f
+[credential]
+	helper = osxkeychain
+[core]
+	excludesfile = /Users/mick/.gitignore_global
+	pager = less -r
+[remote "origin"]
+	fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
+[alias]
+	bb = repo bb
+	hub = repo hub
+    lab = repo gitlab
+    glog = log --pretty=format:'%Cred%ad%Creset %h %s %Cblue(%an)%Cgreen%d' --date=iso
+    prune = fetch --prune
+    undo = reset --soft HEAD^
+    stash-all = stash save --include-untracked
+[mergetool "fugitive"]
+	cmd = vim -f -c \"Gdiff\" \"$MERGED\"
+[merge]
+	tool = fugitive
+    ff = only
+[color]
+	ui = true
+[status]
+    showUntrackedFiles = all
+[commit]
+	gpgsign = true
+[gpg]
+	program = /usr/local/bin/gpg1

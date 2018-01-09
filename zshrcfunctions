@@ -1,0 +1,424 @@
+[[ $- != *i* ]] && return
+
+alias sshi='ssh -o "StrictHostKeyChecking=no"'
+alias q='workon'
+alias d.env='eval $(docker-machine env default)'
+alias d.tmp='docker run --rm -ti $1'
+alias d.ps='docker ps'
+
+alias venv.source='vim $VIRTUAL_ENV/bin/postactivate'
+
+# Get total size of each folder in current directory (including hidden dirs)
+alias big='du -h -x -s .[!.]* *| sort -hs'
+
+# Get size of current folder contents
+alias folders='find . -maxdepth 1 -type d -print0 | xargs -0 du -hs | sort -hs'
+
+alias gitlog="git log --pretty=format:'%Cred%ad%Creset %h %s %Cblue(%an)%Cgreen%d' --date=iso | less -r"
+alias qa='tee -a /tmp/ansible.run | aq'
+alias vi='vim'
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias mem='free -mho'
+alias mon='top | grep $1'
+alias whatismyip='curl ipinfo.io/ip'
+alias vimtips='vim ~/.vimtips'
+alias bashrc='vim ~/.bashrc'
+alias findage='find . -type f -mtime $1'
+alias sudo='nocorrect sudo'
+alias gitdiff='echo git diff origin/master && git diff origin/master'
+alias v.ssh='vagrant ssh'
+alias v.halt='vagrant halt'
+alias v.box.list='vagrant box list'
+alias v.snap.take='vagrant snapshot take $1'
+alias v.snap.back='vagrant snapshot back'
+alias v.snap.list='vagrant snapshot list'
+alias v.status='vagrant status'
+alias v.destroy='vagrant destroy'
+alias v.up='vagrant up'
+alias v.up.p='vagrant up --provider=docker'
+alias v.init='vagrant init'
+alias ipgrep='grep -n -R -E "([0-9]{1,3}[\.]){3}[0-9]{1,3}" ./*'
+alias be='bundle exec'
+
+function fcd() {
+  dir=$(dirname $(find . -name "*$1*" -print -quit))
+  echo "Changing to dir: $dir"
+  cd $dir
+}
+
+function fvim() {
+  file=$(find . -name "*$1*" -print -quit -type f)
+  echo "Opening file: $file"
+  vim $file
+}
+
+function if_bundled() {
+
+  if [ -d ".bundle" ]; then
+    echo "bundle exec bin/kitchen $1"
+  else
+    echo "kitchen $1"
+  fi
+}
+
+function w() {
+  workon $(workon | grep -i $1 | head -n 1)
+}
+
+function pubip_lookup {
+    for zone in nl2 admin-nl1 nl1 beta-nl2; do
+        echo $zone
+        cloudmonkey --profile=$zone list publicipaddresses ipaddress=$1
+    done
+}
+
+
+alias k.c='$(if_bundled converge)'
+alias k.d='$(if_bundled destroy)'
+alias k.list='$(if_bundled list)'
+alias k.login='$(if_bundled login)'
+alias k.v='$(if_bundled verify)'
+alias k.test='$(if_bundled test)'
+alias k.exec='$(if_bundled exec)'
+
+function knife.search() {
+    echo knife search node "$1"
+    knife search node "$1"
+}
+alias knife.upload="knife cookbook upload ${VIRTUAL_ENV##*/} --freeze"
+
+function knife.roles() {
+  query="recipes:*$1*"
+  knife search node $query
+}
+
+function venv.rm() {
+  echo rmvirtualenv $1
+  rmvirtualenv $1
+  echo -n "Remove ~/pro/$1 ???"
+  read test
+  mv ~/pro/$1 ~/rm/$1
+}
+
+function git.diff() {
+    git log --graph --pretty=format:'%Cred%ad%Creset %h %s %Cblue(%an)%Cgreen%d' --abbrev-commit --date=iso origin/master..origin/develop | grep -v 'Merge branch'
+    true
+}
+
+function gitstatusauto() {
+    for gitfile in `git status -s | awk '{ print $2 }' `;
+      do
+          read -p "$gitfile " choice
+            case "$choice" in 
+              y ) git diff $gitfile;;
+              n ) echo "ignoring";;
+              * ) echo "invalid";;
+            esac
+            if [ "$choice" == "y" ]; then
+            read -p "Commit?" choice
+            case "$choice" in 
+              y ) git add $gitfile && git commit;;
+              n ) echo "ignoring";;
+              * ) echo "invalid";;
+            esac
+            fi
+
+      done
+}
+
+function gitstatusall() {
+
+  for gitdir in `find ~/pro/ -name .git`; 
+    do 
+        workdir=${gitdir%/*}; 
+        echo; 
+        echo $workdir; 
+        git --git-dir=$gitdir --work-tree=$workdir status -s; 
+    done
+}
+
+function curl_graph() {
+    while true; do 
+      sleep 0.1 ; curl -q --silent -w '%{time_total}' "$1" -o /dev/null; echo; done | feedgnuplot --lines --stream --terminal 'dumb 300,20'
+}
+
+function ipl() {
+    ip a | grep 'inet ' | awk '{ print $2 }'
+}
+
+function big_match() {
+    find . -iname "*$1*" | xargs du -khc | tail -1 | awk '{ print $1 }'
+}
+function port_clients() {
+    sudo netstat -nt | grep $1 | grep "ESTABLISHED" | awk '{ split ($5, a, ":"); print a[1] }' | sort -n | uniq
+    sudo netstat -nt | grep $1 | grep "ESTABLISHED" | awk '{ split ($5, a, ":"); print a[1] }' | sort -n | uniq | wc -l
+}
+
+# Check if there is an internet connection
+
+function p8() {
+  while true; do 
+    ping -c 1 8.8.8.8 > /dev/null 2>&1
+    if [[ $? == 0 ]]; then
+      printf ":"
+      sleep 0.5
+    else
+      printf "."
+      sleep 0.5
+    fi
+  done
+}
+
+# Quick way to serve files in HTTP from the local dir
+alias webs='python2 -m SimpleHTTPServer & sleep 1 && open http://localhost:8000/'
+
+# Alias find open ports and process name
+alias openports='sudo netstat -tulpn | grep LISTEN | awk "{ print \$7,\$4 }" | sed "s/.*\///g" | sort'
+alias openports_watch='watch sudo netstat -tulpn | grep LISTEN | awk "{ print \$7,\$4 }" | sed "s/.*\///g" | sort'
+
+function fawk {
+    first="awk '{print "
+    last="}'"
+    cmd="${first}\$${1}${last}"
+    eval $cmd
+}
+
+# History grep shorthand
+function h() {
+	if [ -z "$1" ]
+	then
+		history -i 1
+	else
+        str=
+        for i in $@
+        do
+            str="$str.*$i"
+        done
+		history -i 1 | egrep "$str"
+	fi
+}
+
+sshtunnel() {
+    ssh_host="$4"
+
+	if [ -z "$1" ]
+	then
+		echo "Shorthand for setting up an ssh tunnel"
+		echo "Usage: sshtunnel host remoteport localport ssh_host web_prefix (optional)"
+		echo "Example (ssh tunnel to router): sshtunnel 192.168.3.254 443 3000 username@ssh_host https"
+	elif [ -n "$5" ]
+    then
+ 		sudo ssh -f -L $3:$1:$2 $ssh_host -N && open $5://localhost:$3
+    else
+        sudo ssh -f -L $3:$1:$2 $ssh_host -N
+	fi
+}
+
+psgrep() {
+	if [ ! -z $1 ] ; then
+		echo "Grepping for processes matching $1..."
+		ps aux | grep $1 | grep -v grep
+	else
+		echo "!! Need name to grep for"
+	fi
+}
+
+grepc() {
+	if [ ! -z $1 ] ; then
+		echo "Grepping column $1 for string $2"
+        awk "\$$1 ~ /$2/"
+	else
+		echo "!! grepc column string"
+	fi
+}
+
+regrm() {
+	if [ ! -z $1 ] ; then
+        echo "perl-rename -n "s/$1//" "$2""
+        perl-rename -n "s/$1//" "$2"
+        read -p "Are you sure? " -n 1 -r
+        echo    # (optional) move to a new line
+        if [[ $REPLY =~ ^[Yy]$ ]]
+        then
+            perl-rename -v "s/$1//" "$2"
+        fi
+	else
+		echo "!! regrm "pattern" "glob""
+	fi
+
+}
+
+
+findr() {
+	if [ ! -z $1 ] ; then
+		find . -iname "*$1*"
+	else
+		echo "!! Usage: findr string"
+	fi
+}
+
+findvim() {
+	if [ ! -z $1 ] ; then
+        filename=`find . -iname "*$1*" | head -1`
+        vim $filename
+	else
+		echo "!! Usage: findvim string"
+	fi
+}
+
+c() {
+	if [ ! -z $1 ] ; then
+        filename=`find . -iname "*$1*" | head -1`
+        folder=`dirname $filename`
+        cd $folder
+        pwd
+        ls
+	else
+		echo "!! Usage: findvim string"
+	fi
+}
+
+hgrep() {
+    if [ ! -z $1 ] ; then
+    	grep "$@" /home/mick/pro/sysops-config-mgmt/provisioning/pro/inventory | grep ansible_ssh_host | sed 's/ansible_ssh_host=//'
+    else
+        echo "!! Usage: hgrep hostname"
+    fi
+}
+
+dgrep() {
+    if [ ! -z $1 ] ; then
+    	grep "$@" ~/pro/dev-tools/provisioning/host_vars/172.31.210.1.yml
+    else
+        echo "!! Usage: dgrep hostname"
+    fi
+}
+
+grepr() {
+    if [ ! -z $1 ] ; then
+    	grep -R -I -i "$*" .
+    else
+        echo "!! Usage: grepr string"
+    fi
+}
+
+grepvim() {
+    if [ ! -z $1 ] ; then
+        grep -R -l -i "$*" . | head -1 | xargs vim
+    else
+        echo "!! Usage: grepr string"
+    fi
+}
+
+grepcode() {
+	if [ ! -z $2 ] ; then
+		grep -v "$2" $1 | grep -v "^$"
+    elif [ ! -z $1 ] ; then
+		grep -v "#" $1 | grep -v "^$"
+	else
+		echo "!! Usage: grepcode filename commentcode"
+    fi
+}
+
+greplog() {
+	if [ ! -z $1 ] ; then
+        sudo grep -R -i "$1" /var/log/
+    else
+        echo "!! Usage: greplog string"
+    fi
+}
+
+grepv() {
+	ignore="${*:2}"
+	grepstart="grep -v -E '("
+	grepend=")' $1"
+	pattern=""
+	# Get the last argument
+	for last; do true; done
+
+	if [ ! -z $1 ] ; then
+		for item in $ignore ; do
+			if [ $item == $last ] ; then
+				pattern="$pattern$item"
+			else
+				pattern="$pattern$item|"
+			fi
+		done
+		eval $grepstart$pattern$grepend
+	
+	else
+        echo "!! Usage: grepv string string string"
+    fi
+}
+
+d.bash() {
+    echo "Entering the following containers: "
+    docker ps -a -f name="$1" | grep -v "CONTAINER ID"
+    docker exec -ti `docker ps -a -q -f name="$1"` /bin/bash
+}
+
+d.rm() {
+    docker ps -a -f name="$1" | grep -v "CONTAINER ID"
+    echo -n "Removing?"
+    read test
+    docker rm -f `docker ps -a -q -f name="$1"`
+}
+
+d.restart() {
+    echo "Restarting the following containers: "
+    docker ps -a -f name="$1" | grep -v "CONTAINER ID"
+    docker restart `docker ps -a -q -f name="$1"` > /dev/null
+}
+
+grepp() {
+    ignore="${*:2}"
+    grepstart="grep -E '("
+    grepend=")' $1"
+    pattern=""
+    # Get the last argument
+    for last; do true; done
+
+    if [ ! -z $1 ] ; then
+        for item in $ignore ; do
+            if [ $item == $last ] ; then
+                pattern="$pattern$item"
+            else
+                pattern="$pattern$item|"
+            fi
+        done
+		echo $grepstart$pattern$grepend
+		eval $grepstart$pattern$grepend
+
+    else
+        echo "!! Usage: grepp string string string"
+    fi
+}
+
+function gitl() {
+    for k in $(git branch | sed 's/^..//'); do echo -e $(git log -1 --pretty=format:"%Cgreen%ci %Cblue%cr%Creset" $k --)\\t"$k";done | sort
+}
+
+findgrep() {
+	if [ ! -z $1 ] ; then
+        sudo find . -iname "$1" -exec cat '{}' \; | grep $2
+    else
+        echo "!! Usage: findgrep file_pattern grep_pattern"
+        echo "E.g findgrep *.sls config.cfg"
+    fi
+}
+
+# This is where you put your hand rolled scripts (remember to chmod them)
+PATH="$HOME/.gem/ruby/2.1.0/bin:$HOME/bin:$PATH"
+
+### Bash Variables ###
+export HISTFILESIZE=1000000000
+export HISTSIZE=1000000
+export HISTTIMEFORMAT='%F %T '
+export EDITOR=vim
+export VISUAL=vim
+
+### Source local file for any special changes ###
+source ~/.kube-aliases.sh

@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+
+search = ARGV[0]
+blacklist = ['.git', '.log']
+results = `grep -R -I -i #{search} .`
+
+result_hash = {}
+counter = 0
+result_list = results.split("\n")
+result_list.each do |result|
+  split = result.split(':',2)
+  file = split[0].gsub('./','')
+  text = split[1].strip[0,120]
+  blacklisted = false
+  blacklist.each do |black|
+    if file.include? black
+      blacklisted = true
+    end
+  end
+  if blacklisted
+    next
+  end
+  if not result_hash.keys.include? file
+    result_hash[file] = []
+  end
+  result_hash[file] << text
+end
+
+result_hash.each do |file, lines|
+  counter += 1
+  puts "#{counter}: #{file}"
+  lines.each do |line|
+    puts "  #{line}"
+  end
+end
+
+choice = STDIN.gets.chomp().to_i
+
+filename = result_hash.keys[choice - 1]
+exec("vim #{filename}")

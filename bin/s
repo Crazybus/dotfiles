@@ -1,0 +1,22 @@
+#!/usr/bin/env python2
+
+import sys
+import os
+dir = os.path.dirname(os.path.realpath(__file__))
+
+pattern = sys.argv[1]
+
+import subprocess
+
+# Stolen from: http://stackoverflow.com/questions/1825692/can-python-send-text-to-the-mac-clipboard/25802742#25802742
+def write_to_clipboard(output):
+    process = subprocess.Popen(
+        'pbcopy', env={'LANG': 'en_US.UTF-8'}, stdin=subprocess.PIPE)
+    process.communicate(output.encode('utf-8'))
+
+with open(os.path.join(dir, 's.txt'), 'r') as s_file:
+    for line in s_file.readlines():
+        if pattern in line:
+            match = line.rsplit('#',1)[0]
+            print match
+            write_to_clipboard(match)
