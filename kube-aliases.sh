@@ -7,7 +7,7 @@ c.env() {
 }
 
 c.temp() {
-  kubectl run --rm -ti temp-$(date +%s) alpine --rm --command=true --attach=true /bin/sh
+  kubectl run --rm -ti temp-$(date +%s) --image=alpine --rm --command=true --attach=true /bin/sh
 }
 
 c.ns() {
@@ -48,17 +48,17 @@ c.wait() {
 
 c.sh() {
   if [ -n "$2" ] ; then
-    kubectl exec -ti $(kubectl get pods | grep -v Terminating | awk '{ print $1 }' | grep "$1" | head -n 1) -c $2 sh
+    kubectl exec -ti $(kubectl get pods -o wide | grep -v Terminating | grep "$1" | awk '{ print $1 }' | head -n 1) -c $2 sh
   else
-    kubectl exec -ti $(kubectl get pods | grep -v Terminating | awk '{ print $1 }' | grep "$1" | head -n 1) sh
+    kubectl exec -ti $(kubectl get pods -o wide | grep -v Terminating | grep "$1" | awk '{ print $1 }' | head -n 1) sh
   fi
 }
 
 c.log() {
   if [ -n "$2" ] ; then
-    kubectl logs -f $(kubectl get pods -a | grep -v Terminating | awk '{ print $1 }' | grep "$1" | head -n 1) -c $2
+    kubectl logs -f $(kubectl get pods -o wide | grep -v Terminating | grep "$1" | awk '{ print $1 }' | head -n 1) -c $2
   else
-    kubectl logs -f $(kubectl get pods -a | grep -v Terminating | awk '{ print $1 }' | grep "$1" | head -n 1)
+    kubectl logs -f $(kubectl get pods -o wide | grep -v Terminating | grep "$1" | awk '{ print $1 }' | head -n 1)
   fi
 }
 
