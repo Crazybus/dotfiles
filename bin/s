@@ -14,7 +14,7 @@ def write_to_clipboard(output):
         'pbcopy', env={'LANG': 'en_US.UTF-8'}, stdin=subprocess.PIPE)
     process.communicate(output.encode('utf-8'))
 
-with open(os.path.join(dir, 's.txt'), 'r') as s_file:
+with open(os.path.expanduser('.s.txt'), 'r') as s_file:
     for line in s_file.readlines():
         if pattern in line:
             match = line.rsplit('#',1)[0]
