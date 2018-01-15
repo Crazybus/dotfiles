@@ -43,7 +43,15 @@ alias v.init='vagrant init'
 alias ipgrep='grep -n -R -E "([0-9]{1,3}[\.]){3}[0-9]{1,3}" ./*'
 alias be='bundle exec'
 
-function secret() {
+function unseal() {
+  while true; do
+    for pod in $(kubectl get pods -n ${VAULT_NAMESPACE} -l release=${VAULT_CLUSTER} -o name | awk -F'/' '{ print $2 }'); do
+        echo unsealing $pod; kubectl exec -ti $pod -c vault -- /bin/sh -c "export VAULT_ADDR=http://127.0.0.1:8200; vault unseal $VAULT_UNSEAL1 ; vault unseal $VAULT_UNSEAL2 ; vault unseal $VAULT_UNSEAL3"
+    done
+  done
+}
+
+function ks () {
   dir=~/.secret
   file=$(ls $dir | grep $1 | head -n 1)
   eval $(keybase pgp decrypt -i $dir/$file) && echo decrypted $file
