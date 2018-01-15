@@ -43,6 +43,12 @@ alias v.init='vagrant init'
 alias ipgrep='grep -n -R -E "([0-9]{1,3}[\.]){3}[0-9]{1,3}" ./*'
 alias be='bundle exec'
 
+function secret() {
+  dir=~/.secret
+  file=$(ls $dir | grep $1 | head -n 1)
+  eval $(keybase pgp decrypt -i $dir/$file) && echo decrypted $file
+}
+
 function fcd() {
   dir=$(dirname $(find . -name "*$1*" -print -quit))
   echo "Changing to dir: $dir"
