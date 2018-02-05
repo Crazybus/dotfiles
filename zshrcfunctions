@@ -51,6 +51,11 @@ function unseal() {
   done
 }
 
+function ssl-expires () {
+  host=$1
+  echo | openssl s_client -servername NAME -connect $host 2>/dev/null | openssl x509 -noout -dates
+}
+
 function ks () {
   dir=~/.secret
   file=$(ls $dir | grep $1 | head -n 1)

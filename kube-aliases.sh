@@ -6,6 +6,10 @@ c.env() {
   export KUBE=true
 }
 
+c.bad() {
+  kubectl get pods -a -o json  | jq -r '.items[] | select(.status.phase == "Running" and ([ .status.conditions[] | select(.type == "Ready" and .status == "False") ] | length ) == 1 ) | .metadata.name + ": " + (.status.conditions[] | select(.type == "Ready") .message)'
+}
+
 c.temp() {
   kubectl run --rm -ti temp-$(date +%s) --image=alpine --rm --command=true --attach=true /bin/sh
 }

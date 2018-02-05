@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+: ${AWS_PROFILE? Set aws profile .e.g 'AWS_PROFILE=prod'}
+export AWS_PROFILE
+
+unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+
+arn=$(aws sts get-caller-identity --output text --query Arn | sed 's|:user/|:mfa/|')
+
+echo -n "${AWS_PROFILE}/${arn} - MFA token: "
+read token
+creds=$(aws sts get-session-token --serial-number $arn --token-code $token)
+
+echo "Exporting AWS credentials"
+export AWS_ACCESS_KEY_ID=$(echo $creds | jq -r '.Credentials.AccessKeyId')
+export AWS_SECRET_ACCESS_KEY=$(echo $creds | jq -r '.Credentials.SecretAccessKey')
+export AWS_SESSION_TOKEN=$(echo $creds | jq -r '.Credentials.SessionToken')
+
+export AWS_PROFILE="${AWS_PROFILE}-sts"
+echo "Updating ~/.aws/credentials for profile ${AWS_PROFILE}"
+
+aws configure set aws_access_key_id "${AWS_ACCESS_KEY_ID}"
+aws configure set aws_secret_access_key "${AWS_SECRET_ACCESS_KEY}"
+aws configure set aws_session_token "${AWS_SESSION_TOKEN}"
