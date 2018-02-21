@@ -3,7 +3,7 @@
 alias sshi='ssh -o "StrictHostKeyChecking=no"'
 alias q='workon'
 alias d.env='eval $(docker-machine env default)'
-alias d.tmp='docker run --rm -ti $1'
+alias d.tmp='docker run --rm -ti -v $(pwd):/app -w /app $1'
 alias d.ps='docker ps'
 
 alias venv.source='vim $VIRTUAL_ENV/bin/postactivate'

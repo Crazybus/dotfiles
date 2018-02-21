@@ -1,0 +1,14 @@
+#!/usr/bin/env python2
+
+import subprocess
+import sys
+
+run = sys.argv[1]
+files = sys.argv[2::]
+
+pattern = ["-name '*.{0}'".format(t) for t in files]
+find_filter = ' -or '.join(pattern)
+
+cmd = 'find . {0} | entr -c {1}'.format(find_filter, run)
+print cmd
+subprocess.call(cmd, shell=True)
