@@ -44,6 +44,6 @@ bind f:cmd;shift focus 'Rambox'
 bind s:cmd;shift focus 'Spotify'
 bind h:cmd;shift focus 'TogglDesktop'
 bind l:cmd;shift shell ~/bin/lockscreen.sh
-bind m:cmd;shift focus 'Mail'
-bind e:cmd;shift focus 'TickTick'
+bind e:cmd;shift focus 'Code'
 bind a:cmd;shift focus 'Calendar'
+bind m:cmd;shift focus 'Yubico Authenticator'
