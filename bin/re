@@ -1,0 +1,52 @@
+#!/usr/bin/env python2
+
+import os
+import subprocess
+import sys
+
+file_num = None
+
+if sys.argv[-1].isdigit():
+    file_num = int(sys.argv[-1])
+    del sys.argv[-1]
+
+match = ' '.join(sys.argv[1::])
+
+
+blue = '\033[0;34m'
+cyan = '\033[0;36m'
+pink = '\033[0;35m'
+orange = '\033[0;33m'
+yellow = '\033[0;32m'
+red = '\033[0;31m'
+end = '\033[0m'
+bold = '\033[1m'
+
+counter = 1
+
+def cmd(command):
+    print(command)
+    return subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout.read()
+
+matches = {}
+if match:
+    for f in cmd('rg -i "{0}"'.format(match)).strip('\n').split('\n'):
+        if f == '':
+            continue
+        path, line = f.split(':', 1)
+        line = line.strip()
+        if path not in matches:
+            matches[path] = []
+        matches[path].append(line)
+
+    
+    for path, lines in matches.iteritems():
+        if not file_num:
+            print('{cyan}{counter}. {blue}{path}'.format(**locals()))
+        for line in lines:
+            if file_num == counter:
+                os.system('vim ' + os.path.join(os.getcwd(), path))
+                exit(0)
+            else:
+                print('  {end}{line}'.format(**locals()))
+        counter += 1

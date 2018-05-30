@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -ex
+
+branch="$1"
+
+echo
+read -n 1 -p "Confirm rebase and force push for: ${branch}"
+
+git fetch origin ${branch}
+git fetch origin master
+
+git checkout ${branch}
+git rebase origin/master
+
+git push origin ${branch} -f

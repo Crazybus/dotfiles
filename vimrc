@@ -75,6 +75,7 @@ Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'millermedeiros/vim-statline'
 Plugin 'scrooloose/nerdtree'
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-rhubarb'
 Plugin 'vim-syntastic/syntastic'
 
 call vundle#end()

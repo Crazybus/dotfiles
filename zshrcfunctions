@@ -8,6 +8,8 @@ alias d.ps='docker ps'
 
 alias venv.source='vim $VIRTUAL_ENV/bin/postactivate'
 
+alias agrep='gron ~/.ansible/tmp/cache/production/ansible-ec2.cache | grep $1'
+
 # Get total size of each folder in current directory (including hidden dirs)
 alias big='du -h -x -s .[!.]* *| sort -hs'
 
@@ -441,3 +443,14 @@ export VISUAL=vim
 
 ### Source local file for any special changes ###
 source ~/.kube-aliases.sh
+
+alias assh="cd ~/pro/infra/ansible && ssh -F ./ssh_config $1"
+
+gssh() {
+    host=$(gron ~/.ansible/tmp/cache/production/ansible-ec2.cache | grep "$1" | gron -ungron | jq -r "._meta.hostvars | keys | first")
+    cd ~/pro/infra/ansible && ssh -F ./ssh_config $host
+}
+
+yk() {
+  ykman oath code -s $1 | pbcopy
+}

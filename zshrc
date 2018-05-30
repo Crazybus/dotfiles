@@ -15,11 +15,14 @@ export PROJECT_HOME=~/pro
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python
 export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
 export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--no-site-packages'
+export LC_CTYPE="en_US.UTF-8"
 source /usr/local/bin/virtualenvwrapper.sh
 source /Users/mick/Downloads/google-cloud-sdk/path.zsh.inc
 
 export VIRTUAL_ENV_DISABLE_PROMPT=1
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 export DISABLE_AUTO_TITLE="true"
+export AWS_DEFAULT_REGION=us-west-2
 
 source ~/.zshrcfunctions
 
@@ -43,3 +46,7 @@ if test -f ~/.gnupg/.gpg-agent-info -a -n "$(pgrep gpg-agent)"; then
 else
   eval $(gpg-agent --daemon --write-env-file ~/.gnupg/.gpg-agent-info)
 fi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+[[ -s "/Users/mick/.gvm/scripts/gvm" ]] && source "/Users/mick/.gvm/scripts/gvm"
