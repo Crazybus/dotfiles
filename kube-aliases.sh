@@ -2,16 +2,12 @@ c.events() {
   kubectl get events --all-namespaces -w  | grep '$1'
 }
 
-c.env() {
-  export KUBE=true
-}
-
 c.bad() {
-  kubectl get pods -a -o json  | jq -r '.items[] | select(.status.phase == "Running" and ([ .status.conditions[] | select(.type == "Ready" and .status == "False") ] | length ) == 1 ) | .metadata.name + ": " + (.status.conditions[] | select(.type == "Ready") .message)'
+  kubectl get pods --all-namespaces -o json  | jq -r '.items[] | select(.status.phase == "Running" and ([ .status.conditions[] | select(.type == "Ready" and .status == "False") ] | length ) == 1 ) | .metadata.name + ": " + (.status.conditions[] | select(.type == "Ready") .message)'
 }
 
 c.temp() {
-  kubectl run --rm -ti temp-$(date +%s) --image=alpine --rm --command=true --attach=true /bin/sh
+  kubectl run --rm -ti micky-temp-$(date +%s) --image=crazybus/dtk --image-pull-policy=Always --rm --command=true --attach=true /bin/sh
 }
 
 c.ns() {
@@ -23,19 +19,31 @@ c.use() {
   kubectl config use-context $(kubectl config view | grep '    cluster:' | sed 's/cluster://g' | sed 's/ //g' | sort | grep $1)
 }
 
+c.off() {
+  kubectl config unset current-context
+}
+
 c.ls() {
   if [ -z "$1" ]; then
-    kubectl get pods -a -o wide
+    kubectl get pods -o wide
   else
-    kubectl get pods -a -o wide | grep "$1"
+    kubectl get pods -o wide | grep "$1"
+  fi
+}
+
+c.lsw() {
+  if [ -z "$1" ]; then
+    watch 'kubectl get pods -o wide'
+  else
+    watch "kubectl get pods -o wide | grep "$1""
   fi
 }
 
 c.lsa() {
   if [ -z "$1" ]; then
-    kubectl get pods -a --all-namespaces -o wide
+    kubectl get pods --all-namespaces -o wide
   else
-    kubectl get pods -a --all-namespaces -o wide | grep "$1"
+    kubectl get pods --all-namespaces -o wide | grep "$1"
   fi
 }
 

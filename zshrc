@@ -17,7 +17,7 @@ export VIRTUALENVWRAPPER_VIRTUALENV=/usr/local/bin/virtualenv
 export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--no-site-packages'
 export LC_CTYPE="en_US.UTF-8"
 source /usr/local/bin/virtualenvwrapper.sh
-source /Users/mick/Downloads/google-cloud-sdk/path.zsh.inc
+source /Users/mick/bin/google-cloud-sdk/path.zsh.inc
 
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
@@ -37,6 +37,8 @@ eval $(gdircolors ~/.dircolors/dircolors.ansi-dark)
 
 export NOTI_SOUND="Glass"
 export NOTI_DEFAULT="banner speech pushbullet"
+
+export RIPGREP_CONFIG_PATH=~/.rg
 
 if test -f ~/.gnupg/.gpg-agent-info -a -n "$(pgrep gpg-agent)"; then
   source ~/.gnupg/.gpg-agent-info

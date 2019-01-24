@@ -43,6 +43,7 @@ noremap   <Left>   <NOP>
 noremap   <Right>  <NOP>
 au FileType gitcommit set tw=72 | set spell
 au FileType markdown set | set spell spelllang=en_us
+au FileType mail set tw=0 spell spelllang=en_us
 au FileType ruby setl sw=2 sts=2 et
 au FileType ansible setl sw=2 sts=2 et
 au FileType yaml setl sw=2 sts=2 et
@@ -66,7 +67,7 @@ call vundle#begin()
 " let Vundle manage Vundle, required
 "
 Plugin 'Align'
-Plugin 'Valloric/YouCompleteMe'
+" Plugin 'Valloric/YouCompleteMe'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'editorconfig/editorconfig-vim'
@@ -154,3 +155,4 @@ au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
+let g:netrw_browsex_viewer="open"

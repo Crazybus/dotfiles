@@ -85,7 +85,7 @@ nix_info() {
 
 kube_info(){
     # Get Virtual Env
-    if [[ -n "$KUBE" ]]; then
+    if kubectl config current-context > /dev/null 2>&1 ; then
         cluster=$(kubectl config current-context)
         namespace=$(kubectl config view | grep -A 3 '\- context:' | grep -A 1 "cluster: $cluster" | grep 'namespace:' | sed 's/.*namespace: //')
         kstatus="$cluster/$namespace"

@@ -39,5 +39,6 @@
     showUntrackedFiles = all
 [commit]
 	gpgsign = true
+    verbose = true
 [gpg]
 	program = /usr/local/bin/gpg1

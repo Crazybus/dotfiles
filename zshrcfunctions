@@ -1,10 +1,12 @@
 [[ $- != *i* ]] && return
 
+alias lansible="lope ansible:1.0.0 ansible-playbook $*"
 alias sshi='ssh -o "StrictHostKeyChecking=no"'
 alias q='workon'
 alias d.env='eval $(docker-machine env default)'
 alias d.tmp='docker run --rm -ti -v $(pwd):/app -w /app $1'
 alias d.ps='docker ps'
+alias gc='git reset --hard HEAD; git clean -ffd'
 
 alias venv.source='vim $VIRTUAL_ENV/bin/postactivate'
 
@@ -51,6 +53,15 @@ function unseal() {
         echo unsealing $pod; kubectl exec -ti $pod -c vault -- /bin/sh -c "export VAULT_ADDR=http://127.0.0.1:8200; vault unseal $VAULT_UNSEAL1 ; vault unseal $VAULT_UNSEAL2 ; vault unseal $VAULT_UNSEAL3"
     done
   done
+}
+
+function me () {
+    echo "Subject: $@" | msmtp -a micky micky@elastic.co
+}
+
+fuction wpr () {
+    noti pratus $1
+    open $1
 }
 
 function ssl-expires () {
@@ -187,7 +198,7 @@ function p8() {
       printf ":"
       sleep 0.5
     else
-      printf "."
+      printf "_"
       sleep 0.5
     fi
   done
@@ -446,6 +457,13 @@ source ~/.kube-aliases.sh
 
 alias assh="cd ~/pro/infra/ansible && ssh -F ./ssh_config $1"
 
+bssh() {
+    host="$1"
+    args="${@:2}"
+    cd ~/pro/infra/ansible
+    vault ssh -role bastion -mode otp $@ -F ./ssh_config
+}
+
 gssh() {
     host=$(gron ~/.ansible/tmp/cache/production/ansible-ec2.cache | grep "$1" | gron -ungron | jq -r "._meta.hostvars | keys | first")
     cd ~/pro/infra/ansible && ssh -F ./ssh_config $host
@@ -453,4 +471,14 @@ gssh() {
 
 yk() {
   ykman oath code -s $1 | pbcopy
+}
+
+gb() {
+   git checkout -b $1 master
+   git reset --hard HEAD; git clean -ffd
+   git pull --rebase origin master
+}
+
+gp() {
+   git pull --rebase origin master
 }
