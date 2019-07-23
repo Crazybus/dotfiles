@@ -1,0 +1,65 @@
+# Index
+
+bind index j next-entry
+bind index k previous-entry
+bind index J next-thread
+bind index K previous-thread
+
+bind index / search
+bind index ? search-reverse
+bind index n search-next
+bind index N search-opposite
+
+bind index gg first-entry
+bind index G last-entry
+
+bind index \Cd half-down
+bind index \Cu half-up
+
+bind index l collapse-thread
+bind index z collapse-all
+
+bind index r reply
+bind index a group-reply
+bind index L list-reply
+
+bind index h limit
+
+# '?' is used for search-opposite
+bind index H help
+
+# Always start with threads collapsed and with the most recent thread selected
+push <collapse-all><last-entry>
+
+# Pager
+
+bind pager j next-line
+bind pager k previous-line
+
+# The mouse wheel seems to send <up><up><up>/<down><down><down> by default with
+# GNOME Terminal. Use it to scroll through messages.
+bind pager <down> next-line
+bind pager <up>   previous-line
+
+bind pager / search
+bind pager ? search-reverse
+bind pager n search-next
+bind pager N search-opposite
+
+bind pager gg top
+bind pager G bottom
+
+bind pager \Cf half-down
+bind pager \Cb half-up
+
+bind pager r reply
+bind pager a group-reply
+bind pager l list-reply
+bind pager L list-reply
+
+# '?' is used for search-opposite
+bind pager \Ch help
+
+bind index,pager D delete-thread
+
+bind index,pager E edit

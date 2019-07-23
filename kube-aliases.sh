@@ -1,3 +1,4 @@
+alias k=kubectl
 c.events() {
   kubectl get events --all-namespaces -w  | grep '$1'
 }
@@ -75,11 +76,11 @@ c.log() {
 }
 
 c.desc() {
-  kubectl describe pod $(kubectl get pods -a | grep -v Terminating | awk '{ print $1 }' | grep "$1" | head -n 1)
+  kubectl describe pod $(kubectl get pods | grep -v Terminating | awk '{ print $1 }' | grep "$1" | head -n 1)
 }
 
 c.rm() {
-  pods=$(kubectl get pods -a -o name | grep "$1")
+  pods=$(kubectl get pods -o name | grep "$1")
   echo $pods
   echo -n "Remove?"
   read test

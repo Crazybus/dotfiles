@@ -1,6 +1,10 @@
 hi Comment term=bold ctermfg=lightblue guifg=lightblue
 let g:syntastic_mode_map = { 'mode': 'passive' }
 nmap <F5> :SyntasticToggleMode<CR>
+au FileType go nmap <F10> :GoCoverageToggle -short<cr>
+nmap <F12> :GoDef<CR>
+nnoremap <C-p> :Files<Cr>
+set rtp+=/usr/local/opt/fzf
 let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 let $PAGER=''
 set hlsearch
@@ -42,7 +46,7 @@ noremap   <Down>   <NOP>
 noremap   <Left>   <NOP>
 noremap   <Right>  <NOP>
 au FileType gitcommit set tw=72 | set spell
-au FileType markdown set | set spell spelllang=en_us
+au FileType markdown set spell spelllang=en_us
 au FileType mail set tw=0 spell spelllang=en_us
 au FileType ruby setl sw=2 sts=2 et
 au FileType ansible setl sw=2 sts=2 et
@@ -65,19 +69,23 @@ set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
 " let Vundle manage Vundle, required
-"
+
+Plugin 'Shougo/deoplete.nvim'
+Plugin 'junegunn/fzf.vim'
+Plugin 'fatih/vim-go'
 Plugin 'Align'
-" Plugin 'Valloric/YouCompleteMe'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'editorconfig/editorconfig-vim'
 Plugin 'gmarik/Vundle.vim'
 Plugin 'kien/rainbow_parentheses.vim'
-Plugin 'millermedeiros/vim-statline'
-Plugin 'scrooloose/nerdtree'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-rhubarb'
-Plugin 'vim-syntastic/syntastic'
+
+" Plugin 'vim-syntastic/syntastic'
+" Plugin 'Valloric/YouCompleteMe'
+" Plugin 'millermedeiros/vim-statline'
+" Plugin 'scrooloose/nerdtree'
 
 call vundle#end()
 filetype plugin indent on
@@ -105,28 +113,19 @@ set shiftwidth=4
 " On pressing tab, insert 4 spaces
 set expandtab
 
-" Syntastic Config
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-
-let g:syntastic_always_populate_loc_list = 0
-let g:syntastic_auto_loc_list = 0
-let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 0
 
 " (Optional)Remove Info(Preview) window
-set completeopt-=preview
-
-" (Optional)Hide Info(Preview) window after completions
-autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
-autocmd InsertLeave * if pumvisible() == 0|pclose|endif
-
-" (Optional) Enable terraform plan to be include in filter
-let g:syntastic_terraform_tffilter_plan = 1
+" set completeopt-=preview
+" 
+" " (Optional)Hide Info(Preview) window after completions
+" autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
+" autocmd InsertLeave * if pumvisible() == 0|pclose|endif
+" 
+" " (Optional) Enable terraform plan to be include in filter
+" let g:syntastic_terraform_tffilter_plan = 1
 
 " NerdTree
-map <C-n> :NERDTreeToggle<CR>
+" map <C-n> :NERDTreeToggle<CR>
 
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
@@ -155,4 +154,21 @@ au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
-let g:netrw_browsex_viewer="open"
+ let g:netrw_browsex_viewer="open"
+
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_types = 1
+" let g:go_auto_sameids = 1
+let g:go_fmt_command = "goimports"
+let g:go_auto_type_info = 1
+
+" if has('nvim')
+"     " Enable deoplete on startup
+"     let g:deoplete#enable_at_startup = 1
+" endif

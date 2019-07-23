@@ -1,5 +1,6 @@
 [[ $- != *i* ]] && return
 
+alias grepr=gr
 alias lansible="lope ansible:1.0.0 ansible-playbook $*"
 alias sshi='ssh -o "StrictHostKeyChecking=no"'
 alias q='workon'
@@ -56,12 +57,11 @@ function unseal() {
 }
 
 function me () {
-    echo "Subject: $@" | msmtp -a micky micky@elastic.co
+    echo "Subject: $@\n\n$@" | msmtp -a micky micky@elastic.co
 }
 
 fuction wpr () {
     noti pratus $1
-    open $1
 }
 
 function ssl-expires () {
@@ -97,7 +97,7 @@ function if_bundled() {
 }
 
 function w() {
-  workon $(workon | grep -i $1 | head -n 1)
+  workon $(workon | fzf)
 }
 
 function pubip_lookup {
@@ -243,9 +243,9 @@ sshtunnel() {
 		echo "Example (ssh tunnel to router): sshtunnel 192.168.3.254 443 3000 username@ssh_host https"
 	elif [ -n "$5" ]
     then
- 		sudo ssh -f -L $3:$1:$2 $ssh_host -N && open $5://localhost:$3
+ 		ssh -f -L $3:$1:$2 $ssh_host -N && open $5://localhost:$3
     else
-        sudo ssh -f -L $3:$1:$2 $ssh_host -N
+        ssh -f -L $3:$1:$2 $ssh_host -N
 	fi
 }
 
@@ -329,12 +329,8 @@ dgrep() {
     fi
 }
 
-grepr() {
-    if [ ! -z $1 ] ; then
-    	grep -R -I -i "$*" .
-    else
-        echo "!! Usage: grepr string"
-    fi
+gr() {
+    rg --vimgrep $1 | fzf | awk -F":" '{ print $1" +"$2}' | xargs -o vim -o
 }
 
 grepvim() {
@@ -456,6 +452,7 @@ export VISUAL=vim
 source ~/.kube-aliases.sh
 
 alias assh="cd ~/pro/infra/ansible && ssh -F ./ssh_config $1"
+alias issh="workon master && cd ansible && ./connect-to $1"
 
 bssh() {
     host="$1"

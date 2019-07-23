@@ -1,0 +1,102 @@
+set sleep_time=0
+set recall=no
+
+set uncollapse_new     = no # open threads when new mail
+set collapse_unread    = yes  # collapse threads with unread mails
+folder-hook . push '<enter><enter-command>exec collapse-all<enter>'   # Everything collapsed by default
+
+# Accounts
+source ~/.mutt/account-specific-settings
+
+set delete = yes
+unset confirmappend
+macro index,pager 1 "<save-message>=now<enter>"
+macro index,pager 2 "<save-message>=today<enter>"
+macro index,pager 3 "<save-message>=tomorrow<enter>"
+macro index,pager 4 "<save-message>=someday<enter>"
+
+macro index,pager g1 "<change-folder>=now<enter><enter-command>exec collapse-all<enter>"
+macro index,pager g2 "<change-folder>=today<enter><enter-command>exec collapse-all<enter>"
+macro index,pager g3 "<change-folder>=tomorrow<enter><enter-command>exec collapse-all<enter>"
+macro index,pager g4 "<change-folder>=someday<enter><enter-command>exec collapse-all<enter>"
+
+macro pager,attach B "<pipe-message>cat > /tmp/mutt.html; open /tmp/mutt.html<enter>"
+macro index,pager,attach p "<pipe-message>~/bin/open-pr.sh<enter>"
+
+set move = no
+bind index - collapse-thread
+bind index _ collapse-all
+
+macro index,pager         U       "<sync-mailbox>"
+
+# Gmail-style keyboard shortcuts
+macro index,pager ga "<change-folder>=archive<tab><enter>" "Go to all mail"
+macro index,pager gi "<change-folder>=inbox<enter><enter-command>exec collapse-all<enter>" "Go to inbox"
+macro index,pager gs "<change-folder>=sent<enter>" "Go to sent"
+
+auto_view text/html                                      # view html automatically
+alternative_order text/plain text/enriched text/html     # save html for last
+
+set implicit_autoview
+auto_view text/html  application/x-pgp-message
+set mailcap_path="~/.mailcap"
+
+macro index,pager b "<pipe-message> urlscan --compact --dedupe<Enter>" "call urlscan to extract URLs out of a message"
+
+source ~/.mutt/vim
+source ~/.mutt/theme
+
+# Basic Options --------------------------------------
+set wait_key = no        # shut up, mutt
+set mbox_type = Maildir  # mailbox type
+set timeout = 3          # idle time before scanning
+set mail_check = 0       # minimum time between scans
+unset move               # gmail does that
+set delete               # don't ask, just do
+unset confirmappend      # don't ask, just do!
+set quit                 # don't ask, just do!!
+unset mark_old           # read/new is good enough for me
+set thorough_search      # strip headers and eval mimes before searching
+
+# Pager View Options ---------------------------------
+set pager_stop             # don't go to next message automatically
+set menu_scroll            # scroll in menus
+set tilde                  # show tildes like in vim
+unset markers              # no ugly plus signs
+
+set quote_regexp = "^( {0,4}[>|:#%]| {0,4}[a-z0-9]+[>|]+)+"
+
+# Status Bar -----------------------------------------
+set status_chars  = " *%A"
+set status_format = "───[ Folder: %f ]───[%r%m messages%?n? (%n new)?%?d? (%d to delete)?%?t? (%t tagged)? ]───%>─%?p?( %p postponed )?───"
+
+# Pager format
+set pager_format="%D - %d - %e/%E: %-20.20n %s"
+set help=no
+
+# Header Options -------------------------------------
+ignore *                                # ignore all headers
+unignore subject: from: to: date: cc:  # show only these
+unhdr_order *                           # some distros order things by default
+hdr_order subject: from: date: to: cc:  # and in this order
+
+# Index View Options ---------------------------------
+set date_format = "%y/%m/%d %H:%M"
+set index_format = "[%Z]  %D  %-20.20F  %s"
+set sort = threads                         # like gmail
+set sort_aux = last-date-received          # like gmail
+set sort_re                                # thread based on regex
+set reply_regexp = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
+
+set query_command="goobook query %s"
+bind editor <Tab> complete-query
+
+set editor='vim + -c "set textwidth=72" -c "set wrap" -c "set spell spelllang=en"'
+set include=yes
+set fast_reply
+set smart_wrap
+set wrap=80
+set text_flowed=yes
+
+# Open message up in gmail interface
+macro index,pager V "<pipe-message>ruby ~/.mutt/open-message.rb<enter>"
