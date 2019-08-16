@@ -39,9 +39,10 @@ def get_message(message):
 
 
 def get_pull_request_url(content):
-    lastline = content.split("\n")[-1]
+    lastline = content.strip().split("\n")[-1]
     if "https://github.com" in lastline:
-        return lastline.split("#")[0]
+        u = "/".join(lastline.strip("https://github.com").split("/", 4)[:4])
+        return u.split("#")[0]
     return False
 
 
@@ -81,8 +82,7 @@ def get_pr_state(url):
 
 
 def parse_github_url(url):
-    u = url.strip("https://github.com")
-    org, repo, rtype, number = u.split("/")
+    org, repo, rtype, number = url.split("/")
     if rtype == "pull":
         rtype = "pulls"
     return org, repo, rtype, number
