@@ -40,17 +40,16 @@ def get_message(message):
 
 def get_pull_request_url(content):
     lastline = content.split("\n")[-1]
-    if "https://github.com" in lastline and "/pull/" in lastline:
+    if "https://github.com" in lastline:
         return lastline.split("#")[0]
     return False
 
 
 def add_pr_state(url):
     if url not in pr_url_state_map:
-        print(f"Adding url: {url}")
-        pr_url_state_map[url] = get_pr_state(url)
-    else:
-        print(f"skipping url: {url}")
+        state = get_pr_state(url)
+        print(f"state: {state}, url: {url}")
+        pr_url_state_map[url] = state
 
 
 def read_mail(mail_dir):
@@ -64,17 +63,17 @@ def read_mail(mail_dir):
 
 
 def get_pr_state(url):
-    org, repo, number = parse_github_url(url)
+    org, repo, rtype, number = parse_github_url(url)
     token = os.environ["GITHUB_TOKEN"]
     response = requests.get(
-        f"https://api.github.com/repos/{org}/{repo}/pulls/{number}",
+        f"https://api.github.com/repos/{org}/{repo}/{rtype}/{number}",
         auth=HTTPBasicAuth("Crazybus", token),
     )
     d = response.json()
 
     try:
         state = d["state"]
-        if d["merged"]:
+        if "merged" in d and d["merged"]:
             state = "merged"
     except:
         state = "unknown"
@@ -83,8 +82,10 @@ def get_pr_state(url):
 
 def parse_github_url(url):
     u = url.strip("https://github.com")
-    org, repo, _, number = u.split("/")
-    return org, repo, number
+    org, repo, rtype, number = u.split("/")
+    if rtype == "pull":
+        rtype = "pulls"
+    return org, repo, rtype, number
 
 
 box = "/Users/mick/.mail/elastic/inbox"
