@@ -16,12 +16,15 @@ def update_mbox(mail_dir):
             if "notifications@github.com" in message["from"]:
                 content = get_message(message)
                 pr_url = get_pull_request_url(content)
-                if pr_url and "13711" in pr_url:
+                if pr_url and pr_url in pr_url_state_map:
                     pr = pr_url_state_map[pr_url]
                     print(f"Updating: {message['subject']}")
                     del message["Status"]
-                    message.add_header("Status", pr["state"])
-                    message.add_header("Reviews", pr["reviews"])
+                    del message["Users"]
+                    if "state" in pr:
+                        message.add_header("Status", pr["state"])
+                    if "users" in pr:
+                        message.add_header("Users", pr["users"])
                     mbox[message_id] = message
     finally:
         mbox.flush()
@@ -51,12 +54,20 @@ def add_pr_state(url):
     if url in pr_url_state_map:
         return
     owner, repo, rtype, number = parse_github_url(url)
-    if rtype != "pulls":
-        return
-    data = graphql(owner, repo, number)
-    state, reviews = extract_pr(data)
-    print(f"state: {state}, reviews: {reviews}, url: {url}")
-    pr_url_state_map[url] = {"state": state, "reviews": reviews}
+    if rtype == "pulls":
+        data = graphql_pr(owner, repo, number)
+        if not data:
+            return
+        state, users = extract_pr(data)
+        print(f"state: {state}, users: {users}, url: {url}")
+        pr_url_state_map[url] = {"state": state, "users": users}
+    elif rtype == "issues":
+        data = graphql_issue(owner, repo, number)
+        if not data:
+            return
+        state, users = extract_issue(data)
+        pr_url_state_map[url] = {"state": state, "users": users}
+        print(f"state: {state}, users: {users}, url: {url}")
 
 
 def read_mail(mail_dir):
@@ -67,7 +78,6 @@ def read_mail(mail_dir):
             pr_url = get_pull_request_url(content)
             if pr_url:
                 add_pr_state(pr_url)
-                return
 
 
 def parse_github_url(url):
@@ -77,9 +87,18 @@ def parse_github_url(url):
     return owner, repo, rtype, number
 
 
-def graphql(owner, repo, number):
-    url = "https://api.github.com/graphql"
-    token = os.environ["GITHUB_TOKEN"]
+def graphql(query):
+    json = {"query": query}
+    r = requests.post(
+        url="https://api.github.com/graphql",
+        json=json,
+        auth=HTTPBasicAuth(os.environ["GITHUB_USER"], os.environ["GITHUB_TOKEN"]),
+    )
+    d = r.json()["data"]
+    return d
+
+
+def graphql_pr(owner, repo, number):
     query = """
     { repository(owner: "%s", name: "%s") {
         pullRequest(number: %s) {
@@ -134,12 +153,75 @@ def graphql(owner, repo, number):
         repo,
         number,
     )
-    json = {"query": query}
-    r = requests.post(
-        url=url, json=json, auth=HTTPBasicAuth(os.environ["GITHUB_USER"], token)
+    data = graphql(query)
+    if data == None or data["repository"] == None:
+        return False
+    return data["repository"]["pullRequest"]
+
+
+def graphql_issue(owner, repo, number):
+    query = """
+{
+  repository(owner: "%s", name: "%s") {
+    issue(number: %s) {
+      state
+      labels(first: 100) {
+        nodes {
+          name
+        }
+      }
+      author {
+        login
+      }
+      assignees(first: 100) {
+        nodes {
+          login
+        }
+      }
+      participants(last: 10) {
+        nodes {
+          login
+        }
+      }
+    }
+  }
+}
+    """ % (
+        owner,
+        repo,
+        number,
     )
-    d = r.json()["data"]["repository"]["pullRequest"]
-    return d
+    data = graphql(query)
+    if data == None or data["repository"] == None:
+        return False
+    return data["repository"]["issue"]
+
+
+def extract_issue(d):
+    state = d["state"].lower()
+    label = None
+    participants = []
+    for participant in d["participants"]["nodes"]:
+        participants.append(participant["login"])
+    participants = ",".join(participants)
+
+    assignees = []
+    for a in d["assignees"]["nodes"]:
+        assignees.append(a["login"])
+    assignees = ",".join(assignees)
+
+    author = d["author"]["login"]
+
+    for l in d["labels"]["nodes"]:
+        name = l["name"]
+        if name.startswith("area:"):
+            label = name.replace("area:", "")
+
+    state_string = f"{state}, author: {author}, owners: {assignees}"
+    users = f"{participants}"
+    if label:
+        state_string += f", area: {label}"
+    return state_string, users
 
 
 def extract_pr(d):
@@ -164,11 +246,16 @@ def extract_pr(d):
         name = l["node"]["name"]
         if name.startswith("area:"):
             label = name.replace("area:", "")
-    status = d["commits"]["edges"][0]["node"]["commit"]["status"]["state"].lower()
+
+    status = d["commits"]["edges"][0]["node"]["commit"]["status"]
+    if status == None:
+        status = "unknown"
+    else:
+        status = status["state"].lower()
 
     state_string = f"state: {state}, status: {status}"
     if label:
-        state_string += ", area: {label}"
+        state_string += f", area: {label}"
     return state_string, reviews
 
 
