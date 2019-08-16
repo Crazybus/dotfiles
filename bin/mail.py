@@ -16,11 +16,12 @@ def update_mbox(mail_dir):
             if "notifications@github.com" in message["from"]:
                 content = get_message(message)
                 pr_url = get_pull_request_url(content)
-                if pr_url:
-                    state = pr_url_state_map.get(pr_url, "unknown")
+                if pr_url and "13711" in pr_url:
+                    pr = pr_url_state_map[pr_url]
                     print(f"Updating: {message['subject']}")
                     del message["Status"]
-                    message.add_header("Status", state)
+                    message.add_header("Status", pr["state"])
+                    message.add_header("Reviews", pr["reviews"])
                     mbox[message_id] = message
     finally:
         mbox.flush()
@@ -47,10 +48,15 @@ def get_pull_request_url(content):
 
 
 def add_pr_state(url):
-    if url not in pr_url_state_map:
-        state = get_pr_state(url)
-        print(f"state: {state}, url: {url}")
-        pr_url_state_map[url] = state
+    if url in pr_url_state_map:
+        return
+    owner, repo, rtype, number = parse_github_url(url)
+    if rtype != "pulls":
+        return
+    data = graphql(owner, repo, number)
+    state, reviews = extract_pr(data)
+    print(f"state: {state}, reviews: {reviews}, url: {url}")
+    pr_url_state_map[url] = {"state": state, "reviews": reviews}
 
 
 def read_mail(mail_dir):
@@ -61,33 +67,111 @@ def read_mail(mail_dir):
             pr_url = get_pull_request_url(content)
             if pr_url:
                 add_pr_state(pr_url)
-
-
-def get_pr_state(url):
-    org, repo, rtype, number = parse_github_url(url)
-    token = os.environ["GITHUB_TOKEN"]
-    response = requests.get(
-        f"https://api.github.com/repos/{org}/{repo}/{rtype}/{number}",
-        auth=HTTPBasicAuth("Crazybus", token),
-    )
-    d = response.json()
-
-    try:
-        state = d["state"]
-        if "merged" in d and d["merged"]:
-            state = "merged"
-    except:
-        state = "unknown"
-    return state
+                return
 
 
 def parse_github_url(url):
-    org, repo, rtype, number = url.split("/")
+    owner, repo, rtype, number = url.split("/")
     if rtype == "pull":
         rtype = "pulls"
-    return org, repo, rtype, number
+    return owner, repo, rtype, number
 
 
-box = "/Users/mick/.mail/elastic/inbox"
+def graphql(owner, repo, number):
+    url = "https://api.github.com/graphql"
+    token = os.environ["GITHUB_TOKEN"]
+    query = """
+    { repository(owner: "%s", name: "%s") {
+        pullRequest(number: %s) {
+          state
+          commits(last: 1) {
+            edges {
+              node {
+                commit {
+                  status{
+                    state
+                  }
+                }
+              }
+            }
+          }
+          labels(first: 100) {
+            edges {
+              node {
+                name
+              }
+            }
+          }
+          reviewRequests(first: 100) {
+            edges{
+              node {
+                requestedReviewer {
+                  ... on User {
+                    login
+                  }
+                  ... on Team {
+                    name
+                  }
+                }
+              }
+            }
+          }
+          reviews(first: 100) {
+            edges {
+              node {
+                state
+                author {
+                  login
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    """ % (
+        owner,
+        repo,
+        number,
+    )
+    json = {"query": query}
+    r = requests.post(
+        url=url, json=json, auth=HTTPBasicAuth(os.environ["GITHUB_USER"], token)
+    )
+    d = r.json()["data"]["repository"]["pullRequest"]
+    return d
+
+
+def extract_pr(d):
+    state = d["state"].lower()
+    label = None
+    reviewers = {}
+    for reviewer in d["reviews"]["edges"]:
+        reviewers[reviewer["node"]["author"]["login"]] = reviewer["node"][
+            "state"
+        ].lower()
+
+    for reviewer in d["reviewRequests"]["edges"]:
+        reviewers[reviewer["node"]["requestedReviewer"]["login"]] = "requested"
+
+    review_list = []
+    for k, v in reviewers.items():
+        review_list.append(f"{k}: {v}")
+
+    reviews = ", ".join(review_list)
+
+    for l in d["labels"]["edges"]:
+        name = l["node"]["name"]
+        if name.startswith("area:"):
+            label = name.replace("area:", "")
+    status = d["commits"]["edges"][0]["node"]["commit"]["status"]["state"].lower()
+
+    state_string = f"state: {state}, status: {status}"
+    if label:
+        state_string += ", area: {label}"
+    return state_string, reviews
+
+
+box = "/Users/mick/tmp/mailboxbackup/inbox"
 read_mail(box)
 update_mbox(box)
