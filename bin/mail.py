@@ -45,8 +45,8 @@ def get_message(message):
 def get_pull_request_url(content):
     lastline = content.strip().split("\n")[-1]
     if "https://github.com" in lastline:
-        u = "/".join(lastline.strip("https://github.com").split("/", 4)[:4])
-        return u.split("#")[0]
+        u = "/".join(lastline.replace("https://github.com/", "", 1).split("/", 4)[:4])
+        return u.split("#")[0].strip()
     return False
 
 
@@ -259,6 +259,7 @@ def extract_pr(d):
     return state_string, reviews
 
 
-box = "/Users/mick/tmp/mailboxbackup/inbox"
-read_mail(box)
-update_mbox(box)
+if __name__ == "__main__":
+    box = "/Users/mick/tmp/mailboxbackup/inbox"
+    read_mail(box)
+    update_mbox(box)
