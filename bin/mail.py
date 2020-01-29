@@ -94,8 +94,11 @@ def graphql(query):
         json=json,
         auth=HTTPBasicAuth(os.environ["GITHUB_USER"], os.environ["GITHUB_TOKEN"]),
     )
-    d = r.json()["data"]
-    return d
+
+    try:
+        return r.json()["data"]
+    except:
+        return None
 
 
 def graphql_pr(owner, repo, number):
@@ -234,7 +237,11 @@ def extract_pr(d):
         ].lower()
 
     for reviewer in d["reviewRequests"]["edges"]:
-        reviewers[reviewer["node"]["requestedReviewer"]["login"]] = "requested"
+        if "login" in reviewer["node"]["requestedReviewer"]:
+            name = reviewer["node"]["requestedReviewer"]["login"]
+        if "name" in reviewer["node"]["requestedReviewer"]:
+            name = reviewer["node"]["requestedReviewer"]["name"]
+        reviewers[name] = "requested"
 
     review_list = []
     for k, v in reviewers.items():
@@ -260,6 +267,7 @@ def extract_pr(d):
 
 
 if __name__ == "__main__":
-    box = "/Users/mick/tmp/mailboxbackup/inbox"
-    read_mail(box)
-    update_mbox(box)
+    for b in ['inbox','today']:
+        box = "/home/mick/.mail/elastic/" + b
+        read_mail(box)
+        update_mbox(box)

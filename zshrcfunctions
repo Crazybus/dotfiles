@@ -97,7 +97,7 @@ function if_bundled() {
 }
 
 function w() {
-  workon $(workon | fzf)
+  cd ~/pro/$(ls ~/pro | fzf)
 }
 
 function pubip_lookup {
@@ -195,7 +195,7 @@ function p8() {
   while true; do 
     ping -c 1 8.8.8.8 > /dev/null 2>&1
     if [[ $? == 0 ]]; then
-      printf ":"
+      printf "^"
       sleep 0.5
     else
       printf "_"
@@ -301,18 +301,6 @@ findvim() {
 	fi
 }
 
-c() {
-	if [ ! -z $1 ] ; then
-        filename=`find . -iname "*$1*" | head -1`
-        folder=`dirname $filename`
-        cd $folder
-        pwd
-        ls
-	else
-		echo "!! Usage: findvim string"
-	fi
-}
-
 hgrep() {
     if [ ! -z $1 ] ; then
     	grep "$@" /home/mick/pro/sysops-config-mgmt/provisioning/pro/inventory | grep ansible_ssh_host | sed 's/ansible_ssh_host=//'
@@ -382,10 +370,8 @@ grepv() {
     fi
 }
 
-d.bash() {
-    echo "Entering the following containers: "
-    docker ps -a -f name="$1" | grep -v "CONTAINER ID"
-    docker exec -ti `docker ps -a -q -f name="$1"` /bin/bash
+d.sh() {
+  docker exec -ti $(docker ps | tail -n +2 | fzf | awk '{ print $1 }') /bin/sh
 }
 
 d.rm() {
@@ -478,4 +464,51 @@ gb() {
 
 gp() {
    git pull --rebase origin master
+}
+
+remark() {
+    cat ~/pro/dotfiles/dockerfiles/remark | docker build -t remark - > /dev/null 2>&1
+    pwd=${PWD}
+    git_root=$(git rev-parse --show-toplevel)
+    lope -dir ${git_root} -workDir ${git_root} remark "cd $pwd && remark -u validate-links --frail --quiet ."
+    cd ${pwd}
+}
+
+f() {
+    vim $(fd "$1" | fzf)
+}
+
+unalias e
+e() {
+    code $(fd "$1" | fzf)
+}
+
+c() {
+    dir=$(fd "$1" | fzf)
+    if [[ -d "$dir" ]]; then
+        cd $dir
+    else
+        cd $(dirname "$dir")
+    fi
+}
+
+idoc() {
+    doc=$(find /home/mick/pro/master/docs | fzf | sed 's;/Users/mick/pro/master/;https://github.com/elastic/infra/tree/master/;')
+    echo Doc: $doc
+    echo $doc | pbcopy
+    open $doc
+}
+
+cdproject() {
+    cd $(git rev-parse --show-toplevel)
+}
+
+export FZF_DEFAULT_COMMAND="rg --files --hidden"
+
+g.c() {
+  git checkout $(git branch | fzf)
+}
+
+g.a() {
+  git add $(git status -s | grep -v 'A  ' | cut -c4- | fzf)
 }

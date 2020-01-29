@@ -23,7 +23,7 @@ bind index r reply
 bind index a group-reply
 bind index L list-reply
 
-bind index h limit
+bind index f limit
 
 # '?' is used for search-opposite
 bind index H help

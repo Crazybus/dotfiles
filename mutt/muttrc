@@ -10,18 +10,17 @@ source ~/.mutt/account-specific-settings
 
 set delete = yes
 unset confirmappend
-macro index,pager 1 "<save-message>=now<enter>"
-macro index,pager 2 "<save-message>=today<enter>"
-macro index,pager 3 "<save-message>=tomorrow<enter>"
-macro index,pager 4 "<save-message>=someday<enter>"
 
-macro index,pager g1 "<change-folder>=now<enter><enter-command>exec collapse-all<enter>"
-macro index,pager g2 "<change-folder>=today<enter><enter-command>exec collapse-all<enter>"
-macro index,pager g3 "<change-folder>=tomorrow<enter><enter-command>exec collapse-all<enter>"
-macro index,pager g4 "<change-folder>=someday<enter><enter-command>exec collapse-all<enter>"
+macro index,pager g1 "<change-folder>=today<enter><enter-command>exec collapse-all<enter>"
+macro index,pager g2 "<change-folder>=someday<enter><enter-command>exec collapse-all<enter>"
 
 macro pager,attach B "<pipe-message>cat > /tmp/mutt.html; open /tmp/mutt.html<enter>"
 macro index,pager,attach p "<pipe-message>~/bin/open-pr.sh<enter>"
+macro index,pager,attach t "<pipe-message>~/bin/add-task-warrior ''<enter>"
+macro index,pager,attach 1 "<pipe-message>~/bin/add-task-warrior now<enter>"
+macro index,pager,attach 2 "<pipe-message>~/bin/add-task-warrior 16:00<enter>"
+macro index,pager,attach 3 "<pipe-message>~/bin/add-task-warrior 2d<enter>"
+macro index,pager,attach 4 "<pipe-message>~/bin/add-task-warrior 7d<enter>"
 
 set move = no
 bind index - collapse-thread
@@ -45,6 +44,9 @@ macro index,pager b "<pipe-message> urlscan --compact --dedupe<Enter>" "call url
 
 source ~/.mutt/vim
 source ~/.mutt/theme
+
+macro index s "<enter-command>unset wait_key<enter><shell-escape>mutt-notmuch-py ~/.mail/elastic/temporary/search<enter><change-folder-readonly>+temporary/search<enter>" "search mail (using notmuch)"
+
 
 # Basic Options --------------------------------------
 set wait_key = no        # shut up, mutt
@@ -76,27 +78,29 @@ set help=no
 
 # Header Options -------------------------------------
 ignore *                                # ignore all headers
-unignore subject: from: to: date: cc:  # show only these
+unignore cc: to: date: from: subject: status: users: # show only these
 unhdr_order *                           # some distros order things by default
-hdr_order subject: from: date: to: cc:  # and in this order
+hdr_order subject: status: users: date: cc: to: from: # and in this order
 
 # Index View Options ---------------------------------
-set date_format = "%y/%m/%d %H:%M"
+set date_format = "%d.%m.%y %H:%M"
 set index_format = "[%Z]  %D  %-20.20F  %s"
 set sort = threads                         # like gmail
-set sort_aux = last-date-received          # like gmail
+set sort_aux = date-received          # like gmail
 set sort_re                                # thread based on regex
 set reply_regexp = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
 
 set query_command="goobook query %s"
 bind editor <Tab> complete-query
 
-set editor='vim + -c "set textwidth=72" -c "set wrap" -c "set spell spelllang=en"'
+#set editor='nvim -u NONE -c "set columns=80 wrap linebreak spell spelllang=en formatoptions=nawrtcq"'
+set editor='nvim -c "set tw=0 textwidth=0"'
 set include=yes
 set fast_reply
-set smart_wrap
+set text_flowed
+
 set wrap=80
-set text_flowed=yes
+set smart_wrap
 
 # Open message up in gmail interface
 macro index,pager V "<pipe-message>ruby ~/.mutt/open-message.rb<enter>"

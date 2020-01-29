@@ -77,6 +77,10 @@ virtualenv_info(){
     [[ -n "$venv" ]] && echo " $venv"
 }
 
+set_current_dir() {
+    pwd >! ~/tmp/whereami
+}
+
 nix_info() {
     if [[ -n "$IN_NIX_SHELL" ]]; then
         echo " nix/$name"
@@ -88,6 +92,7 @@ kube_info(){
     if kubectl config current-context > /dev/null 2>&1 ; then
         cluster=$(kubectl config current-context)
         namespace=$(kubectl config view | grep -A 3 '\- context:' | grep -A 1 "cluster: $cluster" | grep 'namespace:' | sed 's/.*namespace: //')
+        cluster=$(kubectl config current-context| sed 's/gke_.*_//')
         kstatus="$cluster/$namespace"
     else
         kstatus=''
@@ -112,7 +117,7 @@ prompt_pure_precmd() {
 	# git info
 	vcs_info
 
-	local prompt_pure_preprompt="%F{yellow}`prompt_pure_cmd_exec_time`%f%F{magenta}`tf_info`%f%F{green}`kube_info``nix_info`%f%F{cyan}`virtualenv_info`%f%F{blue}$vcs_info_msg_0_`prompt_pure_git_dirty` %*"
+	local prompt_pure_preprompt="%F{yellow}`prompt_pure_cmd_exec_time`%f%F{magenta}`tf_info`%f%F{green}`kube_info``set_current_dir`%f%F{cyan}`virtualenv_info`%f%F{blue}$vcs_info_msg_0_`prompt_pure_git_dirty` %*"
     RPROMPT=$prompt_pure_preprompt
 	#print -P $prompt_pure_preprompt
 
@@ -155,9 +160,6 @@ prompt_pure_setup() {
 	zstyle ':vcs_info:*' enable git
 	zstyle ':vcs_info:git*' formats ' %b'
 	zstyle ':vcs_info:git*' actionformats ' %b|%a'
-
-	# show username@host if logged in through SSH
-	[[ "$SSH_CONNECTION" != '' ]] && prompt_pure_username='%n@%m '
 
 	# prompt turns red if the previous command didn't exit with 0
 	PROMPT='%(?.%F{blue}.%F{red})❯%f '

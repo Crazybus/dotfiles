@@ -1,44 +1,54 @@
 [include]
-    path = ~/.gitconfig.local
+path = ~/.gitconfig.local
 [diff]
-    tool = icdiff
+tool = icdiff
 [difftool]
-    prompt = false
+prompt = false
 [difftool "icdiff"]
-  cmd = /usr/local/bin/icdiff --line-numbers $LOCAL $REMOTE
+cmd = /usr/local/bin/icdiff --line-numbers $LOCAL $REMOTE
 [push]
-	default = nothing
-    followTags = true
+default = nothing
+followTags = true
 [filter "lfs"]
-	smudge = git-lfs smudge %f
-	required = true
-	clean = git-lfs clean %f
+smudge = git-lfs smudge %f
+required = true
+clean = git-lfs clean %f
 [credential]
-	helper = osxkeychain
+helper = osxkeychain
 [core]
-	excludesfile = /Users/mick/.gitignore_global
-	pager = less -r
+excludesfile = /Users/mick/.gitignore_global
+pager = less -r
 [remote "origin"]
-	fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
+fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
 [alias]
-	bb = repo bb
-	hub = repo hub
-    lab = repo gitlab
-    glog = log --pretty=format:'%Cred%ad%Creset %h %s %Cblue(%an)%Cgreen%d' --date=iso
-    prune = fetch --prune
-    undo = reset --soft HEAD^
-    stash-all = stash save --include-untracked
+bb = repo bb
+a = commit --amend
+hub = repo hub
+lab = repo gitlab
+glog = log --pretty=format:'%Cred%ad%Creset %h %s %Cblue(%an)%Cgreen%d' --date=iso
+prune = fetch --prune
+undo = reset --soft HEAD^
+stash-all = stash save --include-untracked
+c = "commit"
+f = "!git ls-files -m -o --exclude-standard | fzf --print0 -m | xargs -0 -t -o git add"
 [mergetool "fugitive"]
-	cmd = vim -f -c \"Gdiff\" \"$MERGED\"
+cmd = vim -f -c \"Gdiff\" \"$MERGED\"
+[mergetool "vimdiff"]
+cmd = vimdiff
 [merge]
-	tool = fugitive
-    ff = only
+tool = fugitive
+ff = only
 [color]
-	ui = true
+ui = true
 [status]
-    showUntrackedFiles = all
+showUntrackedFiles = all
 [commit]
-	gpgsign = true
-    verbose = true
+gpgsign = true
+verbose = true
 [gpg]
-	program = /usr/local/bin/gpg1
+program = /usr/bin/gpg
+[mergetool "diffconflicts"]
+cmd = diffconflicts vim $BASE $LOCAL $REMOTE $MERGED
+trustExitCode = true
+[mergetool]
+keepBackup = false

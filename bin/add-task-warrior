@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -euox pipefail
+
+stdin=$(cat)
+echo $stdin > ~/tmp/add-task-warrior
+subject=$(echo $stdin | sed 's/.*Subject: //' | cut -c1-80)
+
+/usr/bin/task add "MAIL: $subject" due:$1 emailbody:"$stdin"
+sleep 0.2
+#/usr/bin/noti -b -m "added task: $subject"

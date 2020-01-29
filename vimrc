@@ -47,7 +47,8 @@ noremap   <Left>   <NOP>
 noremap   <Right>  <NOP>
 au FileType gitcommit set tw=72 | set spell
 au FileType markdown set spell spelllang=en_us
-au FileType mail set tw=0 spell spelllang=en_us
+" au FileType mail setl formatoptions=w colorcolumn=+1 textwidth=0
+au FileType mail set columns=80 wrap linebreak spell spelllang=en textwidth=0
 au FileType ruby setl sw=2 sts=2 et
 au FileType ansible setl sw=2 sts=2 et
 au FileType yaml setl sw=2 sts=2 et
@@ -64,37 +65,59 @@ set undofile
 set undodir=~/.vim/undo/
 
 filetype off                  " required
+
+call plug#begin('~/.vim/plugged')
+Plug 'Shougo/deoplete.nvim'
+Plug 'junegunn/fzf.vim'
+Plug 'fatih/vim-go'
+"Plug 'Align'
+Plug 'junegunn/vim-easy-align'
+Plug 'airblade/vim-gitgutter'
+"Plug 'altercation/vim-colors-solarized'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'gmarik/Vundle.vim'
+Plug 'kien/rainbow_parentheses.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+call plug#end()
+
+
 " Vundle stuff
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-
-" let Vundle manage Vundle, required
-
-Plugin 'Shougo/deoplete.nvim'
-Plugin 'junegunn/fzf.vim'
-Plugin 'fatih/vim-go'
-Plugin 'Align'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'editorconfig/editorconfig-vim'
-Plugin 'gmarik/Vundle.vim'
-Plugin 'kien/rainbow_parentheses.vim'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-rhubarb'
-
-" Plugin 'vim-syntastic/syntastic'
-" Plugin 'Valloric/YouCompleteMe'
-" Plugin 'millermedeiros/vim-statline'
-" Plugin 'scrooloose/nerdtree'
-
-call vundle#end()
+"" set rtp+=~/.vim/bundle/Vundle.vim
+"" call vundle#begin()
+"" 
+"" " let Vundle manage Vundle, required
+"" 
+"" Plugin 'Shougo/deoplete.nvim'
+"" Plugin 'junegunn/fzf.vim'
+"" Plugin 'fatih/vim-go'
+"" Plugin 'Align'
+"" Plugin 'airblade/vim-gitgutter'
+"" Plugin 'altercation/vim-colors-solarized'
+"" Plugin 'editorconfig/editorconfig-vim'
+"" Plugin 'gmarik/Vundle.vim'
+"" Plugin 'kien/rainbow_parentheses.vim'
+"" Plugin 'tpope/vim-fugitive'
+"" Plugin 'tpope/vim-rhubarb'
+"" Plugin 'neoclide/coc.nvim@release'
+"" 
+"" " Plugin 'tpope/vim-fireplace'
+"" " Plugin 'venantius/vim-cljfmt'
+"" 
+"" " Plugin 'vim-syntastic/syntastic'
+"" " Plugin 'Valloric/YouCompleteMe'
+"" " Plugin 'millermedeiros/vim-statline'
+"" " Plugin 'scrooloose/nerdtree'
+"" 
+"" call vundle#end()
 filetype plugin indent on
 filetype plugin on
 
 
 " Theme
 set background=dark
-colorscheme solarized
+"colorscheme solarized
 if filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
     let g:solarized_termcolors=256
     let g:solarized_termtrans=1
@@ -167,8 +190,10 @@ let g:go_highlight_types = 1
 " let g:go_auto_sameids = 1
 let g:go_fmt_command = "goimports"
 let g:go_auto_type_info = 1
+let g:go_def_mode='gopls'
+let g:go_info_mode='gopls'
 
-" if has('nvim')
-"     " Enable deoplete on startup
-"     let g:deoplete#enable_at_startup = 1
-" endif
+:let @s="/                 \<CR>d$\<Esc>"
+
+hi clear SpellBad
+hi SpellBad cterm=underline

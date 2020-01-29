@@ -1,0 +1,6 @@
+#!/bin/bash
+code=$(ykman oath code -s $(ykman oath code | awk '{ print $1 }' | fzf))
+echo $code
+echo $code | xclip -selection clipboard
+echo $code | xclip
+exec
