@@ -1,0 +1,122 @@
+[general]
+targets = github_issues, github_pr, github_pulls, github_urgent, github_pulls_failed, github_adopt, github_time
+
+# Setting this to True will include a link to the ticket in the description
+inline_links = False
+
+# Setting this to True will include a link to the ticket as an annotation
+annotation_links = False
+
+# Setting this to True will include issue comments and author name in task
+# annotations
+annotation_comments = False
+
+# Defines whether or not issues should be matched based upon their description.
+# In legacy mode, we will attempt to match issues to bugs based upon the
+# presence of the '(bw)' marker in the task description.
+# If this is false, we will only select issues having the appropriate UDA
+# fields defined (which is smarter, better, newer, etc..)
+legacy_matching = False
+
+# log.level specifies the verbosity.  The default is DEBUG.
+# log.level can be one of DEBUG, INFO, WARNING, ERROR, CRITICAL, DISABLED
+#log.level = DEBUG
+
+# If log.file is specified, output will be redirected there.  If it remains
+# unspecified, output is sent to sys.stderr
+#log.file = /var/log/bugwarrior.log
+
+# Configure the default description or annotation length.
+annotation_length = 160
+description_length = 160
+
+[github_issues]
+github.query = assignee:Crazybus is:open
+github.description_template = GH; {{githubtitle}}
+
+service = github
+github.default_priority = 
+github.include_repos = infra
+github.include_user_issues = False
+github.include_user_repos = False
+github.login = Crazybus
+github.password = @oracle:eval:cat /home/mick/.github_token
+github.username = elastic
+
+[github_pr]
+github.description_template = RR; {{githubuser}}: {{githubtitle}}
+github.query = review-requested:Crazybus is:open
+
+service = github
+github.default_priority = 
+github.include_repos = infra
+github.include_user_issues = False
+github.include_user_repos = False
+github.login = Crazybus
+github.password = @oracle:eval:cat /home/mick/.github_token
+github.username = elastic
+
+[github_pulls]
+github.description_template = PR; {{githubtitle}}
+github.query = is:pr author:Crazybus is:open
+
+service = github
+github.default_priority = 
+github.include_repos = infra
+github.include_user_issues = False
+github.include_user_repos = False
+github.login = Crazybus
+github.password = @oracle:eval:cat /home/mick/.github_token
+github.username = elastic
+
+[github_urgent]
+github.query = is:open label:urgency/now label:area:hosting
+github.description_template = URGENT; {{githubtitle}}
+
+service = github
+github.default_priority = 
+github.include_repos = infra
+github.include_user_issues = False
+github.include_user_repos = False
+github.login = Crazybus
+github.password = @oracle:eval:cat /home/mick/.github_token
+github.username = elastic
+
+[github_pulls_failed]
+github.description_template = FAILED; {{githubtitle}}
+github.query = is:pr author:Crazybus is:open status:failure
+
+service = github
+github.default_priority = 
+github.include_repos = infra
+github.include_user_issues = False
+github.include_user_repos = False
+github.login = Crazybus
+github.password = @oracle:eval:cat /home/mick/.github_token
+github.username = elastic
+
+[github_adopt]
+github.description_template = ADOPT; {{githubtitle}}
+github.query = is:issue is:open label:adopt-me label:area:hosting
+
+service = github
+github.default_priority = 
+github.include_repos = infra
+github.include_user_issues = False
+github.include_user_repos = False
+github.login = Crazybus
+github.password = @oracle:eval:cat /home/mick/.github_token
+github.username = elastic
+
+[github_time]
+github.description_template = TIME; {{githubtitle}}
+github.query = is:issue is:open label:time-sensitive label:area:hosting
+
+service = github
+github.default_priority = 
+github.include_repos = infra
+github.include_user_issues = False
+github.include_user_repos = False
+github.login = Crazybus
+github.password = @oracle:eval:cat /home/mick/.github_token
+github.username = elastic
