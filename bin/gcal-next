@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+import subprocess
+import os
+
+cmd = [
+    'gcalcli',
+    '--calendar', 'michael.russell@elastic.co',
+    'agenda',
+    '--details', 'location',
+    'today',
+    '--tsv'
+]
+my_env = os.environ
+my_env['PYTHONIOENCODING'] = 'utf-8'
+
+cal = subprocess.check_output(cmd, env=my_env).decode("utf-8").split('\n')
+
+for event in cal:
+    if 'NOTICE: Jenkins Upgrades' in event:
+        continue
+    break
+
+_, start, _, end, description, url = event.split('\t')
+print(f"Calendar: {start}-{end} {description} {url}")

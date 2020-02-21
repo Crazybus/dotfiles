@@ -5,11 +5,11 @@ import os
 cmd = [
     'gcalcli',
     '--calendar', 'Personal Calendar',
-    '--calendar', 'Michael Russell',
+    '--calendar', 'michael.russell@elastic.co',
     '--calendar', 'Pingboard Infra Calendar',
     '--calendar', 'Infra Team Calendar',
     '--calendar', 'Shared Calendar',
-    '--calendar', 'On Call Schedule for Micky Russell',
+    '--calendar', 'On Call Schedule for Infra Regular Rotation',
     'agenda',
     '--details', 'location',
     'today',
