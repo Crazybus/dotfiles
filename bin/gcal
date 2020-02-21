@@ -19,9 +19,8 @@ cmd = [
     "agenda",
     "--details",
     "location",
-    "today",
+    "now",
     "14 days",
-    "--nostarted",
     "--tsv",
 ]
 my_env = os.environ

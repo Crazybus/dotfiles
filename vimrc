@@ -69,7 +69,7 @@ filetype off                  " required
 call plug#begin('~/.vim/plugged')
 Plug 'Shougo/deoplete.nvim'
 Plug 'junegunn/fzf.vim'
-Plug 'fatih/vim-go'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 "Plug 'Align'
 Plug 'junegunn/vim-easy-align'
 Plug 'airblade/vim-gitgutter'
