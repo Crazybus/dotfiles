@@ -3,24 +3,29 @@ import subprocess
 import os
 
 cmd = [
-    'gcalcli',
-    '--calendar', 'On Call Schedule for Infra Regular Rotation',
-    'agenda',
-    '--details', 'location',
-    'today',
-    '--tsv'
+    "gcalcli",
+    "--calendar",
+    "On Call Schedule for Infra Regular Rotation",
+    "agenda",
+    "--details",
+    "location",
+    "today",
+    "--nostarted",
+    "--tsv",
 ]
 my_env = os.environ
-my_env['PYTHONIOENCODING'] = 'utf-8'
+my_env["PYTHONIOENCODING"] = "utf-8"
 
-cal = subprocess.check_output(cmd, env=my_env).decode("utf-8").split('\n')
+cal = subprocess.check_output(cmd, env=my_env).decode("utf-8").split("\n")
+
 
 def get_schedule(event):
-    _, start, _, end, description, _ = event.split('\t')
-    user = description.split('-')[1].strip().split()[0]
-    return f"{start}-{end} {user}"
+    _, start, _, end, description, _ = event.split("\t")
+    user = description.split("-")[1].strip().split()[0]
+    return f"{user} {start}-{end}"
+
 
 now = get_schedule(cal[0])
 after = get_schedule(cal[1])
 
-print(f"PagerDuty: {now}|{after}".strip())
+print(f"PagerDuty: {now}, {after}".strip())

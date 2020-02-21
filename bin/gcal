@@ -3,43 +3,50 @@ import subprocess
 import os
 
 cmd = [
-    'gcalcli',
-    '--calendar', 'Personal Calendar',
-    '--calendar', 'michael.russell@elastic.co',
-    '--calendar', 'Pingboard Infra Calendar',
-    '--calendar', 'Infra Team Calendar',
-    '--calendar', 'Shared Calendar',
-    '--calendar', 'On Call Schedule for Infra Regular Rotation',
-    'agenda',
-    '--details', 'location',
-    'today',
-    '14 days',
-    '--tsv'
+    "gcalcli",
+    "--calendar",
+    "Personal Calendar",
+    "--calendar",
+    "michael.russell@elastic.co",
+    "--calendar",
+    "Pingboard Infra Calendar",
+    "--calendar",
+    "Infra Team Calendar",
+    "--calendar",
+    "Shared Calendar",
+    "--calendar",
+    "On Call Schedule for Infra Regular Rotation",
+    "agenda",
+    "--details",
+    "location",
+    "today",
+    "14 days",
+    "--nostarted",
+    "--tsv",
 ]
 my_env = os.environ
-my_env['PYTHONIOENCODING'] = 'utf-8'
+my_env["PYTHONIOENCODING"] = "utf-8"
 
 cal = subprocess.check_output(cmd, env=my_env).decode("utf-8")
 
-blue = '\033[0;34m'
-cyan = '\033[0;36m'
-pink = '\033[0;35m'
-orange = '\033[0;33m'
-yellow = '\033[0;32m'
-red = '\033[0;31m'
-clear = '\033[0m'
-bold = '\033[1m'
+blue = "\033[0;34m"
+cyan = "\033[0;36m"
+pink = "\033[0;35m"
+orange = "\033[0;33m"
+yellow = "\033[0;32m"
+red = "\033[0;31m"
+clear = "\033[0m"
+bold = "\033[1m"
 
 deduplicator = []
 
-for c in cal.split('\n')[::-1]:
-    length = len(c.split('\t'))
+for c in cal.split("\n")[::-1]:
+    length = len(c.split("\t"))
     if length != 6:
         continue
-    s = c.split('\t')
+    s = c.split("\t")
     if s in deduplicator:
         continue
     deduplicator.append(s)
     date, start, _, end, title, url = s
     print(f"{cyan}{date[8:]} {start}-{end} {blue}{title} {orange}{url}".rstrip())
- 
