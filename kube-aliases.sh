@@ -63,7 +63,17 @@ c.sh() {
   kubectl exec -ti $(pods.py | fzf --no-sort) sh
 }
 
+c.sha() {
+  export ALL_NAMESPACES=t
+  kubectl exec -ti $(pods.py | fzf --no-sort) sh
+}
+
 c.log() {
+  kubectl logs -f $(pods.py | fzf --no-sort)
+}
+
+c.loga() {
+  export ALL_NAMESPACES=t
   kubectl logs -f $(pods.py | fzf --no-sort)
 }
 
@@ -86,6 +96,12 @@ c.last() {
 }
 
 c.desc() {
+  export DONT_PRINT_CONTAINERS=t
+  kubectl describe pod $(pods.py | fzf)
+}
+
+c.desca() {
+  export ALL_NAMESPACES=t
   export DONT_PRINT_CONTAINERS=t
   kubectl describe pod $(pods.py | fzf)
 }
