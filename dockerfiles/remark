@@ -1,0 +1,3 @@
+FROM node
+
+RUN npm install --global remark-cli remark-validate-links

@@ -28,6 +28,7 @@ export AWS_DEFAULT_REGION=us-west-2
 
 source ~/.zshrcfunctions
 
+export PATH=$PATH:~/pro/keybase_dotfiles/bin
 export PATH=$PATH:~/go/bin
 export PATH=$PATH:/opt/local/sbin
 export PATH=$PATH:/opt/local/bin
