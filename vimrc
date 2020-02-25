@@ -73,7 +73,7 @@ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 "Plug 'Align'
 Plug 'junegunn/vim-easy-align'
 Plug 'airblade/vim-gitgutter'
-"Plug 'altercation/vim-colors-solarized'
+Plug 'altercation/vim-colors-solarized'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'gmarik/Vundle.vim'
 Plug 'kien/rainbow_parentheses.vim'

@@ -493,10 +493,10 @@ c() {
 }
 
 idoc() {
-    doc=$(find /home/mick/pro/master/docs | fzf | sed 's;/Users/mick/pro/master/;https://github.com/elastic/infra/tree/master/;')
+    doc=$(find /home/mick/pro/master/docs | fzf | sed 's;/home/mick/pro/master/;https://github.com/elastic/infra/tree/master/;')
     echo Doc: $doc
     echo $doc | pbcopy
-    open $doc
+    xdg-open $doc
 }
 
 cdproject() {

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+task $1 | egrep 'Message-ID:|Subject' | ruby ~/.mutt/open-message.rb 
