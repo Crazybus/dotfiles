@@ -1,0 +1,8 @@
+#!/bin/bash
+
+cp /home/mick/tmp/clip-scratch.md.bak{,1}
+cp /home/mick/tmp/clip-scratch.md{,.bak}
+xclip -selection clipboard -out > "/home/mick/tmp/clip-scratch.md"
+termite --exec 'sh -c "sleep 0.1 && vim /home/mick/tmp/clip-scratch.md"'
+cat /home/mick/tmp/clip-scratch.md | xclip -selection clipboard -in
+cat /home/mick/tmp/clip-scratch.md | xclip -o -in

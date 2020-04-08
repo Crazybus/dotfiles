@@ -32,7 +32,7 @@ set t_vb=
 set tm=500
 set ul=100
 set pastetoggle=<F2>
-set clipboard=unnamed
+set clipboard=unnamed,unnamedplus
 nmap <F3> :set nu! rnu!<CR>
 nmap <F7> :set spell spelllang=en_us<CR>
 set number
@@ -54,6 +54,7 @@ au FileType ansible setl sw=2 sts=2 et
 au FileType yaml setl sw=2 sts=2 et
 au FileType json setl sw=2 sts=2 et
 au FileType python setl sw=4 sts=4 et
+au FileType javascript setl sw=2 sts=2 et
 
 " Ansible-vim modifications
 let g:ansible_attribute_highlight = "a"
@@ -67,7 +68,8 @@ set undodir=~/.vim/undo/
 filetype off                  " required
 
 call plug#begin('~/.vim/plugged')
-Plug 'Shougo/deoplete.nvim'
+" Plug 'Shougo/deoplete.nvim'
+" Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
 Plug 'junegunn/fzf.vim'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 "Plug 'Align'
@@ -84,7 +86,7 @@ Plug 'hashivim/vim-terraform'
 Plug 'vim-syntastic/syntastic'
 Plug 'juliosueiras/vim-terraform-completion'
 Plug 'psf/black'
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
 
@@ -123,7 +125,7 @@ filetype plugin on
 " Theme
 set background=dark
 "colorscheme solarized
-if filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
+if filereadable(expand("~/.vim/plugged/vim-colors-solarized/colors/solarized.vim"))
     let g:solarized_termcolors=256
     let g:solarized_termtrans=1
     let g:solarized_contrast="normal"
@@ -200,6 +202,8 @@ let g:go_info_mode='gopls'
 
 :let @s="/                 \<CR>d$\<Esc>"
 
+:let @c="/export \\w*=\\$(\<CR>yypt=lDBBkdwj"
+
 hi clear SpellBad
 hi SpellBad cterm=underline
 
@@ -240,3 +244,7 @@ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 " autocmd BufWritePre *.py execute ':Black'
 autocmd FileType python autocmd BufWritePre <buffer> execute ':Black'
+
+let g:instant_markdown_slow = 1
+
+au FileType markdown nmap <F10> :call kutsan#ftplugin#markdownpreview()<Enter>

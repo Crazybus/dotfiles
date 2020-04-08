@@ -16,7 +16,7 @@ clean = git-lfs clean %f
 [credential]
 helper = osxkeychain
 [core]
-excludesfile = /Users/mick/.gitignore_global
+excludesfile = /home/mick/.gitignore_global
 pager = less -r
 [remote "origin"]
 fetch = +refs/pull/*/head:refs/remotes/origin/pr/*

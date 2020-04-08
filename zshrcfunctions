@@ -66,7 +66,7 @@ fuction wpr () {
 
 function ssl-expires () {
   host=$1
-  echo | openssl s_client -servername NAME -connect $host 2>/dev/null | openssl x509 -noout -dates
+  echo | openssl s_client -servername $(echo $host | cut -d ':' -f1) -connect $host 2>/dev/null | openssl x509 -noout -dates
 }
 
 function ks () {
@@ -475,16 +475,16 @@ remark() {
 }
 
 f() {
-    vim $(fd "$1" | fzf)
+    vim $(fd --hidden "$1" | fzf)
 }
 
 unalias e
 e() {
-    code $(fd "$1" | fzf)
+    code $(fd --hidden "$1" | fzf)
 }
 
 c() {
-    dir=$(fd "$1" | fzf)
+    dir=$(fd --hidden "$1" | fzf)
     if [[ -d "$dir" ]]; then
         cd $dir
     else
@@ -511,4 +511,8 @@ g.c() {
 
 g.a() {
   git add $(git status -s | grep -v 'A  ' | cut -c4- | fzf)
+}
+
+gitroot() {
+    git rev-parse --show-toplevel
 }

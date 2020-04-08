@@ -1,2 +1,2 @@
 #!/bin/bash
-vim ~/.dotfiles/todo.yml
+vim ~/kb/private/crazybus/todo.yml

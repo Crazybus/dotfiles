@@ -8,7 +8,7 @@ c.bad() {
 }
 
 c.temp() {
-  kubectl run --rm -ti micky-temp-$(date +%s) --image=alpine --image-pull-policy=Always --rm --command=true --attach=true /bin/sh
+  kubectl run --generator=run-pod/v1 --rm -ti micky-temp-$(date +%s) --image=crazybus/dtk --image-pull-policy=Always --rm --command=true --attach=true /bin/sh
 }
 
 c.ns() {
@@ -177,4 +177,8 @@ c.usage () {
 
 h.rm() {
   helm del --purge $(helm ls | fzf | awk '{ print $1 }')
+}
+
+c.kibana() {
+  xdg-open "https://$(kubectl get ingress --namespace elastic-apps ea-kibana-kibana -o jsonpath='{.spec.rules[0].host}')"
 }

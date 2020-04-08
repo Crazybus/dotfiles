@@ -1,5 +1,5 @@
 [general]
-targets = github_issues, github_pr, github_pulls, github_urgent, github_pulls_failed, github_adopt, github_time
+targets = github_issues, github_pr, github_pulls, github_urgent, github_pulls_failed, github_time
 
 # Setting this to True will include a link to the ticket in the description
 inline_links = False
@@ -45,7 +45,7 @@ github.username = elastic
 
 [github_pr]
 github.description_template = RR; {{githubuser}}: {{githubtitle}}
-github.query = review-requested:Crazybus is:open
+github.query = review-requested:Crazybus is:open -is:draft
 
 service = github
 github.default_priority = 

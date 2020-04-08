@@ -53,7 +53,11 @@ def get_pull_request_url(content):
 def add_pr_state(url):
     if url in pr_url_state_map:
         return
-    owner, repo, rtype, number = parse_github_url(url)
+    try:
+        owner, repo, rtype, number = parse_github_url(url)
+    except:
+        return
+
     if rtype == "pulls":
         data = graphql_pr(owner, repo, number)
         if not data:
@@ -267,7 +271,7 @@ def extract_pr(d):
 
 
 if __name__ == "__main__":
-    for b in ['inbox','today']:
+    for b in ["inbox", "today"]:
         box = "/home/mick/.mail/elastic/" + b
         read_mail(box)
         update_mbox(box)
