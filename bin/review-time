@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -euo pipefail
+
+git_master="/home/mick/pro/master"
+git_tmp="/home/mick/tmp/review-time"
+
+cd $git_master
+
+git checkout master
+git reset --hard HEAD
+git clean -ffd
+git pull --all --tags --rebase
+
+rm -rf $git_tmp/*
+
+for t in $(task _id 'RR;' +PENDING); do
+    url=$(task information $t | egrep 'Github URL' | egrep -o 'https://github.com/[^/]\S*/[^/]\S*/(issues|pull)/[[:digit:]]+' | uniq | tail -n1) 
+    xdg-open $url
+    id=$(echo $url | rev | cut -d/ -f1 | rev)
+
+    cd $git_master
+    git checkout pr/$id
+    git reset origin/pr/$id --hard
+    git clone --shared . $git_tmp/$id
+done
+
+cd $git_tmp

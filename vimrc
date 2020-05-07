@@ -248,3 +248,4 @@ autocmd FileType python autocmd BufWritePre <buffer> execute ':Black'
 let g:instant_markdown_slow = 1
 
 au FileType markdown nmap <F10> :call kutsan#ftplugin#markdownpreview()<Enter>
+

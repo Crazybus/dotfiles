@@ -13,7 +13,7 @@ c.temp() {
 
 c.ns() {
   namespace=$(kubectl get namespaces |  awk '{print $1}' | fzf)
-  kubectl config set-context $(kubectl config current-context) --namespace=$namespace
+  kubectl config set-context --current --namespace=$namespace
 }
 
 c.use() {

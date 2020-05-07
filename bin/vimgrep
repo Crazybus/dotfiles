@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+
+import subprocess
+import sys
+
+pattern = sys.argv[1]
+output = (
+    subprocess.check_output(f"rg --vimgrep {pattern}".split())
+    .decode("utf-8")
+    .strip()
+    .split("\n")
+)
+
+files = []
+
+for f in output:
+    filename, line, _ = f.split(":", 2)
+    if filename in files:
+        continue
+
+    files.append(filename)
+    subprocess.check_call(f"vim {filename} +{line}".split())

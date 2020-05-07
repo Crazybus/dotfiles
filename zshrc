@@ -33,7 +33,6 @@ export PATH=$PATH:~/go/bin
 export PATH=$PATH:/opt/local/sbin
 export PATH=$PATH:/opt/local/bin
 export PATH=$PATH:~/.local/bin
-alias timeout=gtimeout
 alias nix='nix-shell . --command "zsh"'
 
 export eap=elastic-apps-163815
@@ -73,3 +72,9 @@ fi
 export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 ssh-add -l > /dev/null || ssh-add
 export TERM=xterm
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/mick/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/home/mick/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/mick/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/mick/Downloads/google-cloud-sdk/completion.zsh.inc'; fi

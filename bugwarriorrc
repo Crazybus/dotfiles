@@ -1,5 +1,5 @@
 [general]
-targets = github_issues, github_pr, github_pulls, github_urgent, github_pulls_failed, github_time
+targets = github_issues, github_pr, github_pulls, github_urgent, github_pulls_failed, github_time, github_draft
 
 # Setting this to True will include a link to the ticket in the description
 inline_links = False
@@ -95,9 +95,9 @@ github.login = Crazybus
 github.password = @oracle:eval:cat /home/mick/.github_token
 github.username = elastic
 
-[github_adopt]
-github.description_template = ADOPT; {{githubtitle}}
-github.query = is:issue is:open label:adopt-me label:area:hosting
+[github_time]
+github.description_template = TIME; {{githubtitle}}
+github.query = is:issue is:open label:time-sensitive label:area:hosting
 
 service = github
 github.default_priority = 
@@ -108,9 +108,9 @@ github.login = Crazybus
 github.password = @oracle:eval:cat /home/mick/.github_token
 github.username = elastic
 
-[github_time]
-github.description_template = TIME; {{githubtitle}}
-github.query = is:issue is:open label:time-sensitive label:area:hosting
+[github_draft]
+github.description_template = DRAFT; {{githubuser}}: {{githubtitle}}
+github.query = review-requested:Crazybus is:open is:draft
 
 service = github
 github.default_priority = 

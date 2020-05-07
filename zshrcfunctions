@@ -1,5 +1,6 @@
 [[ $- != *i* ]] && return
 
+alias glow="glow -s ~/pro/dotfiles/glow.json -p $1"
 alias grepr=gr
 alias lansible="lope ansible:1.0.0 ansible-playbook $*"
 alias sshi='ssh -o "StrictHostKeyChecking=no"'
@@ -321,14 +322,6 @@ gr() {
     rg --vimgrep $1 | fzf | awk -F":" '{ print $1" +"$2}' | xargs -o vim -o
 }
 
-grepvim() {
-    if [ ! -z $1 ] ; then
-        grep -R -l -i "$*" . | head -1 | xargs vim
-    else
-        echo "!! Usage: grepr string"
-    fi
-}
-
 grepcode() {
 	if [ ! -z $2 ] ; then
 		grep -v "$2" $1 | grep -v "^$"
@@ -505,14 +498,14 @@ cdproject() {
 
 export FZF_DEFAULT_COMMAND="rg --files --hidden"
 
-g.c() {
-  git checkout $(git branch | fzf)
-}
-
-g.a() {
-  git add $(git status -s | grep -v 'A  ' | cut -c4- | fzf)
-}
-
 gitroot() {
     git rev-parse --show-toplevel
+}
+
+g.f() {
+    vim $(git diff --name-only $(git merge-base origin/master HEAD) | fzf)
+}
+
+g.c() {
+    cd $(dirname $(git diff --name-only $(git merge-base origin/master HEAD) | fzf))
 }
