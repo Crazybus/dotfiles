@@ -20,9 +20,11 @@ for t in $(task _id 'RR;' +PENDING); do
     id=$(echo $url | rev | cut -d/ -f1 | rev)
 
     cd $git_master
+    git clone --shared $git_master $git_tmp/$id
+
+    cd $git_tmp/$id
     git checkout pr/$id
-    git reset origin/pr/$id --hard
-    git clone --shared . $git_tmp/$id
+    git remote set-url origin git@github.com:elastic/infra.git
 done
 
 cd $git_tmp
