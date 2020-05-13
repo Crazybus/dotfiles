@@ -78,3 +78,5 @@ if [ -f '/home/mick/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/home/mi
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/mick/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/mick/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+
+export BAT_THEME="Solarized (dark)"

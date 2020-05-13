@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd ~/pro/keybase_dotfiles/snip/
+cat $(fzf --preview="bat --color always {}") | xclip -selection clipboard -in
