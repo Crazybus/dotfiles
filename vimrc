@@ -70,6 +70,9 @@ filetype off                  " required
 call plug#begin('~/.vim/plugged')
 " Plug 'Shougo/deoplete.nvim'
 " Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
+
+Plug 'godlygeek/tabular'
+Plug 'plasticboy/vim-markdown'
 Plug 'junegunn/fzf.vim'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 "Plug 'Align'
@@ -248,7 +251,9 @@ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " autocmd BufWritePre *.py execute ':Black'
 autocmd FileType python autocmd BufWritePre <buffer> execute ':Black'
 
+
+" Markdown
 let g:instant_markdown_slow = 1
-
 au FileType markdown nmap <F10> :call kutsan#ftplugin#markdownpreview()<Enter>
-
+let g:vim_markdown_follow_anchor = 1
+let g:vim_markdown_folding_disabled = 1
