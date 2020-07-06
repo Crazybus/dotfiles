@@ -249,7 +249,7 @@ let g:deoplete#enable_at_startup = 1
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
 " autocmd BufWritePre *.py execute ':Black'
-autocmd FileType python autocmd BufWritePre <buffer> execute ':Black'
+" autocmd FileType python autocmd BufWritePre <buffer> execute ':Black'
 
 
 " Markdown

@@ -11,6 +11,8 @@ cmd = [
     "--calendar",
     "Pingboard Infra Calendar",
     "--calendar",
+    "Workday Stack - Infra - All Calendar",
+    "--calendar",
     "Infra Team Calendar",
     "--calendar",
     "Shared Calendar",

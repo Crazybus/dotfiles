@@ -29,6 +29,7 @@ wq = :!wr task {TASK_UUID} modify wait:<Enter>
 3 = :!wr sh -c "echo n | task {TASK_UUID} modify wait:2d"<Enter>
 4 = :!wr sh -c "echo n | task {TASK_UUID} modify wait:7d"<Enter>
 5 = :!wr sh -c "echo n | task {TASK_UUID} modify wait:1month"<Enter>
+wd = :!wr /home/mick/bin/wait-one-day-github {TASK_UUID}<Enter>
 V = :!wr /home/mick/bin/task-to-gmail {TASK_UUID}<Enter>
 
 s = {ACTION_TASK_START_STOP}

@@ -509,3 +509,7 @@ g.f() {
 g.c() {
     cd $(dirname $(git diff --name-only $(git merge-base origin/master HEAD) | fzf))
 }
+
+g.pr() {
+    gh pr checkout $(gh pr list --limit 200 | fzf | cut -d'#' -f2)
+}

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -euo pipefail
+
+id="$1"
+
+date=$(task "$id" export | jq -r '.[].githubcreatedon')
+day=$(date -d $(echo $date | cut -c1-8) +%A)
+
+time_plus_day="1d"
+if [[ $day == 'Friday' ]]; then
+  time_plus_day="3d"
+fi
+
+task $id modify wait:$date+$time_plus_day

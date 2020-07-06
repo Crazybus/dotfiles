@@ -20,6 +20,12 @@ cal = subprocess.check_output(cmd, env=my_env).decode("utf-8").split("\n")
 for event in cal:
     if "NOTICE: Jenkins Upgrades" in event:
         continue
+    if "HoTW: " in event:
+        continue
+    if "Coffee Break - AMS Time" in event:
+        continue
+    if "The Bugpool" in event:
+        continue
     break
 
 _, start, _, end, description, url = event.split("\t")

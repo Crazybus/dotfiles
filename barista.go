@@ -190,6 +190,12 @@ func main() {
 			return outputs.Textf("%s", count)
 		}))
 
+	barista.Add(shell.New("/home/mick/pro/keybase_dotfiles/bin/cron-check.sh").
+		Every(time.Second * 5).
+		Output(func(count string) bar.Output {
+			return outputs.Textf("%s", count)
+		}))
+
 	barista.Add(shell.New("/home/mick/bin/gcal-next").
 		Every(time.Minute * 10).
 		Output(func(count string) bar.Output {

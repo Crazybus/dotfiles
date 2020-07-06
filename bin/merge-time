@@ -1,0 +1,9 @@
+#!/bin/bash
+
+set -euo pipefail
+
+for t in $(task _id entry.before:now-24h 'PR;' +PENDING); do
+    url=$(task information $t | egrep 'Github URL' | egrep -o 'https://github.com/[^/]\S*/[^/]\S*/(issues|pull)/[[:digit:]]+' | uniq | tail -n1) 
+    echo "Time to merge $url!"
+    xdg-open $url
+done
