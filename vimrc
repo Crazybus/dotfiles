@@ -88,8 +88,12 @@ Plug 'tpope/vim-rhubarb'
 Plug 'hashivim/vim-terraform'
 Plug 'vim-syntastic/syntastic'
 Plug 'juliosueiras/vim-terraform-completion'
-Plug 'psf/black'
+Plug 'psf/black', { 'branch': 'stable' }
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'venantius/vim-cljfmt'
+Plug 'tpope/vim-fireplace'
+Plug 'tpope/vim-salve'
+Plug 'sfiera/vim-emacsmodeline'
 call plug#end()
 
 
@@ -248,7 +252,7 @@ let g:deoplete#enable_at_startup = 1
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
-" autocmd BufWritePre *.py execute ':Black'
+autocmd BufWritePre *.py execute ':Black'
 " autocmd FileType python autocmd BufWritePre <buffer> execute ':Black'
 
 

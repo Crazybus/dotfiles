@@ -1,5 +1,5 @@
 #!/bin/bash
 
 set -euox pipefail
-/usr/local/bin/task add "$(/usr/bin/pbpaste)"
-/usr/local/bin/noti -m "added task: $(/usr/bin/pbpaste)"
+task add "$(xclip -selection clipboard -out)"
+notify-send "added task: $(xclip -selection clipboard -out)"

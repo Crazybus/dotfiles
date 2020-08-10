@@ -182,3 +182,7 @@ h.rm() {
 c.kibana() {
   xdg-open "https://$(kubectl get ingress --namespace elastic-apps ea-kibana-kibana -o jsonpath='{.spec.rules[0].host}')"
 }
+
+c.bad.nodes() {
+  xdg-open "https://$(kubectl get ingress --namespace elastic-apps ea-kibana-kibana -o jsonpath='{.spec.rules[0].host}')/app/metrics/explorer?_g=()&metricsExplorer=(chartOptions:(stack:!f,type:line,yAxisMode:fromZero),options:(aggregation:count,filterQuery:'kubernetes.node.status.ready : "false" ',groupBy:kubernetes.node.name,metrics:!((aggregation:count))),timerange:(from:now-8h,interval:>%3D10s,to:now))"
+}

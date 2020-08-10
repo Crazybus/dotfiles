@@ -81,6 +81,12 @@ set_current_dir() {
     pwd >! ~/tmp/whereami
 }
 
+aws_info(){
+    if [[ ! -z "${AWS_PROFILE}" ]]; then
+        echo "AWS: ${AWS_PROFILE%-mfa}"
+    fi
+}
+
 kube_info(){
     current=$(cat ~/.kube/config | grep current-context | awk '{ print $2 }')
 
@@ -108,7 +114,7 @@ prompt_pure_precmd() {
 	# git info
 	vcs_info
 
-	local prompt_pure_preprompt="%F{yellow}`prompt_pure_cmd_exec_time`%f%F{magenta}`tf_info`%f%F{green}`kube_info``set_current_dir`%f%F{cyan}`virtualenv_info`%f%F{blue}$vcs_info_msg_0_`prompt_pure_git_dirty` %*"
+	local prompt_pure_preprompt="%F{yellow}`prompt_pure_cmd_exec_time`%f%F{magenta}`tf_info`%f%F{green} `aws_info``kube_info``set_current_dir`%f%F{cyan}`virtualenv_info`%f%F{blue}$vcs_info_msg_0_`prompt_pure_git_dirty` %*"
     RPROMPT=$prompt_pure_preprompt
 
 	# reset value since `preexec` isn't always triggered
