@@ -56,11 +56,17 @@ bindsym $mod+Shift+j move down
 bindsym $mod+Shift+k move up
 bindsym $mod+Shift+l move right
 
+
+bindsym $mod+Shift+Down move workspace to output down
+bindsym $mod+Shift+Up move workspace to output up
+bindsym $mod+Shift+Left move workspace to output left
+bindsym $mod+Shift+Right move workspace to output right
+
 # alternatively, you can use the cursor keys:
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
+#bindsym $mod+Shift+Left move left
+#bindsym $mod+Shift+Down move down
+#bindsym $mod+Shift+Up move up
+#bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
 bindsym $mod+b split h
@@ -72,8 +78,8 @@ bindsym $mod+v split v
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
-# bindsym $mod+s layout stacking
-# bindsym $mod+w layout tabbed
+bindsym $mod+Shift+F1 layout stacking
+bindsym $mod+Shift+F2 layout tabbed
 bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
@@ -133,7 +139,8 @@ workspace 5 output HDMI1
 workspace 6 output eDP1
 
 # reload the configuration file
-bindsym $mod+Shift+c reload
+bindsym $mod+Shift+v reload
+bindsym $mod+Shift+o exec "/home/mick/bin/open-commit"
 bindsym $mod+Shift+r exec "/home/mick/bin/i3_restart.sh"
 bindsym $mod+Shift+y exec "/home/mick/bin/yubi-anywhere"
 bindsym $mod+Shift+e exec "/home/mick/bin/vim-anywhere"
@@ -145,6 +152,9 @@ bindsym --release mod4+l exec --no-startup-id i3lock-fancy
 
 # Open personal tab in Firefox
 bindsym --release $mod+q exec --no-startup-id xdotool key 'Ctrl+Shift+1'
+
+# Mark all as read in Slack
+bindsym --release $mod+Shift+m --no-startup-id xdotool key 'Shift+Escape'
 
 # Play/Pause music
 bindsym --release $mod+m exec --no-startup-id dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause

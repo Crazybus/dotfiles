@@ -1,0 +1,5 @@
+#!/bin/bash
+
+input=$(xclip -selection clipboard -out | sed s';.*commit ;;' | sed s';.*tree ;;' | awk '{print $1}')
+echo $input
+xdg-open https://github.com/elastic/infra/commit/$input

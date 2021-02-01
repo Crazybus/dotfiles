@@ -54,3 +54,12 @@ trustExitCode = true
 keepBackup = false
 [mergetool "vimdiff3"]
 	cmd = vim -f -d -c \"wincmd J\" \"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+[color "diff"]
+	meta = "bold"
+	old = "bold red"
+	new = "bold green"
+#[color "diff"]
+#    meta = blue
+#    old = black red strike
+#    new = black green strike
+#    #context = black # context (ie: unchanged lines) text

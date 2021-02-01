@@ -7,6 +7,10 @@ c.bad() {
   kubectl get pods --all-namespaces -o json | jq -r '.items[] | select((.status.phase == "Running" or .status.phase == "Pending" or .status.phase == "Unknown") and ([ .status.conditions[] | select(.type == "Ready" and .status == "False") ] | length ) == 1 ) | .spec.nodeName + "\t" + .metadata.namespace + "\t" + .metadata.name + "\t" + (.status.conditions[] | select(.type == "Ready") .message)' | column -t
 }
 
+c.oom() {
+  kubectl get pods --all-namespaces -o json | jq -r '.items[] | select(.status.containerStatuses[].lastState.terminated.reason == "OOMKilled") | .spec.nodeName + "\t" + .metadata.namespace + "\t" + .metadata.name'
+}
+
 c.temp() {
   kubectl run --generator=run-pod/v1 --rm -ti micky-temp-$(date +%s) --image=crazybus/dtk --image-pull-policy=Always --rm --command=true --attach=true /bin/sh
 }

@@ -33,7 +33,9 @@ set tm=500
 set ul=100
 set pastetoggle=<F2>
 set clipboard=unnamed,unnamedplus
-nmap <F3> :set nu! rnu!<CR>
+nmap <F1> :diffg LO <CR> " LOCAL
+nmap <F2> :diffg BA <CR> " BASE
+nmap <F3> :diffg RE <CR> " REMOTE
 nmap <F7> :set spell spelllang=en_us<CR>
 set number
 "Disable arrow keys :(...good bye dear friend
@@ -70,6 +72,14 @@ filetype off                  " required
 call plug#begin('~/.vim/plugged')
 " Plug 'Shougo/deoplete.nvim'
 " Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
+
+Plug 'vim-scripts/ConflictMotions'
+" ]x                      Go to [count] next start of a conflict.
+" ]X                      Go to [count] next end of a conflict.
+" [x                      Go to [count] previous start of a conflict.
+" [X                      Go to [count] previous end of a conflict.
+Plug 'inkarkat/vim-ingo-library' " dep for conflict motions
+Plug 'vim-scripts/CountJump'     " dep for conflict motions
 
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'

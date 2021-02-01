@@ -1,5 +1,6 @@
 [[ $- != *i* ]] && return
 
+alias totp='v.prod && vault read --field=code "totp/code/$(vault list totp/keys | fzf)" | xclip -selection clipboard -in'
 alias glow="glow -s ~/pro/dotfiles/glow.json -p $1"
 alias grepr=gr
 alias lansible="lope ansible:1.0.0 ansible-playbook $*"
@@ -35,17 +36,6 @@ alias bashrc='vim ~/.bashrc'
 alias findage='find . -type f -mtime $1'
 alias sudo='nocorrect sudo'
 alias gitdiff='echo git diff origin/master && git diff origin/master'
-alias v.ssh='vagrant ssh'
-alias v.halt='vagrant halt'
-alias v.box.list='vagrant box list'
-alias v.snap.take='vagrant snapshot take $1'
-alias v.snap.back='vagrant snapshot back'
-alias v.snap.list='vagrant snapshot list'
-alias v.status='vagrant status'
-alias v.destroy='vagrant destroy'
-alias v.up='vagrant up'
-alias v.up.p='vagrant up --provider=docker'
-alias v.init='vagrant init'
 alias ipgrep='grep -n -R -E "([0-9]{1,3}[\.]){3}[0-9]{1,3}" ./*'
 alias be='bundle exec'
 
@@ -63,11 +53,6 @@ function me () {
 
 fuction wpr () {
     noti pratus $1
-}
-
-function ssl-expires () {
-  host=$1
-  echo | openssl s_client -servername $(echo $host | cut -d ':' -f1) -connect $host 2>/dev/null | openssl x509 -noout -dates
 }
 
 function ks () {
@@ -436,7 +421,7 @@ alias issh="workon master && cd ansible && ./connect-to $1"
 bssh() {
     host="$1"
     args="${@:2}"
-    cd ~/pro/infra/ansible
+    cd ~/pro/master/ansible
     vault ssh -role bastion -mode otp $@ -F ./ssh_config
 }
 
@@ -512,4 +497,96 @@ g.c() {
 
 g.pr() {
     gh pr checkout $(gh pr list --limit 200 | fzf | cut -d'#' -f2)
+}
+
+git-log() {
+
+  # param validation
+  if [[ ! `git log -n 1 $@ | head -n 1` ]] ;then
+    return
+  fi
+
+  # filter by file string
+  local filter
+  # param existed, git log for file if existed
+  if [ -n $@ ] && [ -f $@ ]; then
+    filter="-- $@"
+  fi
+
+  # git command
+  local gitlog=(
+    git log
+    --color=always
+    --abbrev=7
+    --format='%C(auto)%h %C(yellow)%ad %an %C(blue) %s'
+    --date=short
+    $@
+  )
+
+  # fzf command
+  local fzf=(
+    fzf
+    --ansi --no-sort --reverse --tiebreak=index
+    --preview "f() { set -- \$(echo -- \$@ | grep -o '[a-f0-9]\{7\}'); [ \$# -eq 0 ] || git show --color=always \$1 $filter; }; f {}"
+    --bind "ctrl-q:abort,ctrl-m:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                xargs -I % sh -c 'git show --color=always % $filter | less -R') << 'FZF-EOF'
+                {}
+                FZF-EOF"
+   --preview-window=right:60%
+  )
+
+  # piping them
+  $gitlog | rg -v "Merge Pull Request" | $fzf
+}
+
+
+git-log-regex() {
+
+  # param validation
+  # if [[ ! `git log -n 1 $@ | head -n 1` ]] ;then
+  #   return
+  # fi
+
+  # filter by file string
+  local filter
+  # param existed, git log for file if existed
+  if [ -n $@ ] && [ -f $@ ]; then
+    filter="-- $@"
+  fi
+
+  # git command
+  local gitlog=(
+    git log
+    --color=always
+    --abbrev=7
+    --format='%C(auto)%h %C(yellow)%ad %an %C(blue) %s'
+    --date=short
+    --pickaxe-regex
+    -S "$1" ./
+  )
+
+  # fzf command
+  local fzf=(
+    fzf
+    --ansi --no-sort --reverse --tiebreak=index
+    --preview "f() { set -- \$(echo -- \$@ | grep -o '[a-f0-9]\{7\}'); [ \$# -eq 0 ] || git show --color=always \$1 $filter; }; f {}"
+    --bind "ctrl-q:abort,ctrl-m:execute:
+                (grep -o '[a-f0-9]\{7\}' | head -1 |
+                xargs -I % sh -c 'git show --color=always % $filter | less -R') << 'FZF-EOF'
+                {}
+                FZF-EOF"
+   --preview-window=right:60%
+  )
+
+  # piping them
+  $gitlog | rg -v "Merge Pull Request" | $fzf
+}
+
+docs() {
+    cd ~/pro/master && glow $(fd -i "\.md|\.markdown" | fzf)
+}
+
+escurl() {
+    curl -s -u $ES_USERNAME:$ES_PASSWORD $ES_ADDRESS/$1 | jq -r $2
 }

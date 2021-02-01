@@ -1,0 +1,7 @@
+#!/bin/bash
+
+host="$1"
+if [[ "$host" != http* ]] ; then
+    host="https://$host"
+fi
+curl -sv $host 2>&1 | rg 'expire date'

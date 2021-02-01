@@ -83,7 +83,7 @@ github.password = @oracle:eval:cat /home/mick/.github_token
 github.username = elastic
 
 [github_pulls_failed]
-github.description_template = FAILED; {{githubtitle}}
+github.description_template = FAILED; PR; {{githubtitle}}
 github.query = is:pr author:Crazybus is:open status:failure
 
 service = github
