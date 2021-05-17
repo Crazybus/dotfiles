@@ -21,7 +21,7 @@ bind index z collapse-all
 
 bind index r reply
 bind index a group-reply
-bind index L list-reply
+#bind index L list-reply
 
 bind index f limit
 
@@ -46,6 +46,9 @@ bind pager ? search-reverse
 bind pager n search-next
 bind pager N search-opposite
 
+bind pager l next-thread
+bind pager h previous-thread
+
 bind pager gg top
 bind pager G bottom
 
@@ -54,8 +57,8 @@ bind pager \Cb half-up
 
 bind pager r reply
 bind pager a group-reply
-bind pager l list-reply
-bind pager L list-reply
+# bind pager l list-reply
+# bind pager L list-reply
 
 # '?' is used for search-opposite
 bind pager \Ch help

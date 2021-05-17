@@ -67,18 +67,22 @@ c.sh() {
   kubectl exec -ti $(pods.py | fzf --no-sort) sh
 }
 
+c.ssh() {
+  gcloud compute ssh $(gke-ssh | fzf)
+}
+
 c.sha() {
   export ALL_NAMESPACES=t
   kubectl exec -ti $(pods.py | fzf --no-sort) sh
 }
 
 c.log() {
-  kubectl logs -f $(pods.py | fzf --no-sort)
+  kubectl --tail=100 logs -f $(pods.py | fzf --no-sort) | ccze --raw-ansi
 }
 
 c.loga() {
   export ALL_NAMESPACES=t
-  kubectl logs -f $(pods.py | fzf --no-sort)
+  kubectl --tail=100 logs -f $(pods.py | fzf --no-sort) | ccze --raw-ansi
 }
 
 c.shl() {

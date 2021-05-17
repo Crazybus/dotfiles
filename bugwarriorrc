@@ -1,5 +1,5 @@
 [general]
-targets = github_issues, github_pr, github_pulls, github_urgent, github_pulls_failed, github_time, github_draft
+targets = github_issues, github_pr, github_pulls, github_pulls_failed, github_pr_hosting
 
 # Setting this to True will include a link to the ticket in the description
 inline_links = False
@@ -30,6 +30,7 @@ legacy_matching = False
 annotation_length = 160
 description_length = 160
 
+# My issues
 [github_issues]
 github.query = assignee:Crazybus is:open
 github.description_template = GH; {{githubtitle}}
@@ -43,19 +44,7 @@ github.login = Crazybus
 github.password = @oracle:eval:cat /home/mick/.github_token
 github.username = elastic
 
-[github_pr]
-github.description_template = RR; {{githubuser}}: {{githubtitle}}
-github.query = review-requested:Crazybus is:open -is:draft
-
-service = github
-github.default_priority = 
-github.include_repos = infra
-github.include_user_issues = False
-github.include_user_repos = False
-github.login = Crazybus
-github.password = @oracle:eval:cat /home/mick/.github_token
-github.username = elastic
-
+# My PRs
 [github_pulls]
 github.description_template = PR; {{githubtitle}}
 github.query = is:pr author:Crazybus is:open
@@ -69,19 +58,8 @@ github.login = Crazybus
 github.password = @oracle:eval:cat /home/mick/.github_token
 github.username = elastic
 
-[github_urgent]
-github.query = is:open label:urgency/now label:area:hosting
-github.description_template = URGENT; {{githubtitle}}
 
-service = github
-github.default_priority = 
-github.include_repos = infra
-github.include_user_issues = False
-github.include_user_repos = False
-github.login = Crazybus
-github.password = @oracle:eval:cat /home/mick/.github_token
-github.username = elastic
-
+# My PRs with failed tests
 [github_pulls_failed]
 github.description_template = FAILED; PR; {{githubtitle}}
 github.query = is:pr author:Crazybus is:open status:failure
@@ -95,12 +73,14 @@ github.login = Crazybus
 github.password = @oracle:eval:cat /home/mick/.github_token
 github.username = elastic
 
-[github_time]
-github.description_template = TIME; {{githubtitle}}
-github.query = is:issue is:open label:time-sensitive label:area:hosting
+
+# PR requesting me review
+[github_pr]
+github.description_template = MERR; {{githubuser}}: {{githubtitle}}
+github.query = review-requested:Crazybus -is:draft is:open
 
 service = github
-github.default_priority = 
+github.default_priority = H
 github.include_repos = infra
 github.include_user_issues = False
 github.include_user_repos = False
@@ -108,12 +88,14 @@ github.login = Crazybus
 github.password = @oracle:eval:cat /home/mick/.github_token
 github.username = elastic
 
-[github_draft]
-github.description_template = DRAFT; {{githubuser}}: {{githubtitle}}
-github.query = review-requested:Crazybus is:open is:draft
+
+# Hosting PRs
+[github_pr_hosting]
+github.description_template = RR; {{githubuser}}: {{githubtitle}}
+github.query = is:pr is:open -is:draft -author:Crazybus label:area:hosting -review-requested:Crazybus org:elastic -reviewed-by:@me 
 
 service = github
-github.default_priority = 
+github.default_priority = L
 github.include_repos = infra
 github.include_user_issues = False
 github.include_user_repos = False

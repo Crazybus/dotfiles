@@ -148,7 +148,7 @@ bindsym $mod+Shift+d exec "/home/mick/bin/idoc-anywhere"
 # bindsym $mod+q exec "/home/mick/bin/add-task"
 
 # Lock screen
-bindsym --release mod4+l exec --no-startup-id i3lock-fancy
+bindsym --release mod4+l exec --no-startup-id "/home/mick/bin/i3-lock.sh"
 
 # Open personal tab in Firefox
 bindsym --release $mod+q exec --no-startup-id xdotool key 'Ctrl+Shift+1'

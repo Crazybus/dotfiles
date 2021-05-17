@@ -1,3 +1,3 @@
 #!/bin/bash
 
-i3-msg restart && autorandr office || autorandr
+i3-msg restart && autorandr office || autorandr --change

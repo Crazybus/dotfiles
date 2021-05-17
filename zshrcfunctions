@@ -1,5 +1,7 @@
 [[ $- != *i* ]] && return
 
+alias tw='bugwarrior-pull && vit'
+alias mt='offlineimap -q -a Elastic && mail.py && mutt'
 alias totp='v.prod && vault read --field=code "totp/code/$(vault list totp/keys | fzf)" | xclip -selection clipboard -in'
 alias glow="glow -s ~/pro/dotfiles/glow.json -p $1"
 alias grepr=gr
@@ -415,7 +417,7 @@ export VISUAL=vim
 ### Source local file for any special changes ###
 source ~/.kube-aliases.sh
 
-alias assh="cd ~/pro/infra/ansible && ssh -F ./ssh_config $1"
+alias assh="v.prod && cd ~/pro/infra/ansible && ssh -F ./ssh_config $1"
 alias issh="workon master && cd ansible && ./connect-to $1"
 
 bssh() {
@@ -496,7 +498,11 @@ g.c() {
 }
 
 g.pr() {
-    gh pr checkout $(gh pr list --limit 200 | fzf | cut -d'#' -f2)
+    gh pr checkout $(gh pr list --limit 200 | fzf | awk '{ print $1}' )
+}
+
+g.hosting() {
+    hub pull-request --copy --push --browse --labels area:hosting --reviewer $(gh api -X GET 'orgs/elastic/teams/infra-hosting/members' -F per_page=100 --paginate --cache 1h | jq -r '.[] | .login' | fzf --multi | tr '\n' ',') && sleep 15 && wpr $(pbpaste)
 }
 
 git-log() {
