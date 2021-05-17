@@ -120,11 +120,17 @@ c.edit() {
 }
 
 c.rm() {
-  pods=$(kubectl get pods -o name | grep "$1")
+  export DONT_PRINT_CONTAINERS=t
+  pods=$(pods.py | fzf --multi --bind "ctrl-a:select-all+accept")
   echo $pods
   echo -n "Remove?"
   read test
-  echo "$pods" | xargs kubectl delete
+  kubectl delete pods $(echo $pods | tr " " "\n")
+}
+
+c.edit() {
+  export DONT_PRINT_CONTAINERS=t
+  kubectl edit pod $(pods.py | fzf)
 }
 
 c.tail() {
