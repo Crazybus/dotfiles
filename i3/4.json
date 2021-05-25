@@ -1,0 +1,24 @@
+// vim:ts=4:sw=4:et
+{
+    "border": "pixel",
+    "current_border_width": 1,
+    "floating": "auto_off",
+    "geometry": {
+       "height": 1418,
+       "width": 2558,
+       "x": 1921,
+       "y": 111
+    },
+    "marks": [],
+    "name": "Slack | infra-github | Elastic",
+    "percent": 1,
+    "swallows": [
+       {
+       "class": "^Slack$",
+       "instance": "^slack$",
+       "window_role": "^browser\\-window$"
+       }
+    ],
+    "type": "con"
+}
+

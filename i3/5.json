@@ -1,0 +1,70 @@
+// vim:ts=4:sw=4:et
+{
+    "border": "pixel",
+    "current_border_width": 1,
+    "floating": "auto_off",
+    "geometry": {
+       "height": 600,
+       "width": 800,
+       "x": 0,
+       "y": 0
+    },
+    "marks": [],
+    "name": "Alacritty",
+    "percent": 0.333333333333333,
+    "swallows": [
+       {
+         "class": "^Alacritty$",
+         "instance": "^Alacritty$",
+         "title": "^Alacritty$"
+       }
+    ],
+    "type": "con"
+}
+
+{
+    "border": "pixel",
+    "current_border_width": 1,
+    "floating": "auto_off",
+    "geometry": {
+       "height": 600,
+       "width": 800,
+       "x": 0,
+       "y": 0
+    },
+    "marks": [],
+    "name": "Alacritty",
+    "percent": 0.333333333333333,
+    "swallows": [
+       {
+       "class": "^Alacritty$",
+       "instance": "^Alacritty$",
+       "title": "^Alacritty$"
+       }
+    ],
+    "type": "con"
+}
+
+{
+    "border": "pixel",
+    "current_border_width": 1,
+    "floating": "auto_off",
+    "geometry": {
+       "height": 600,
+       "width": 800,
+       "x": 0,
+       "y": 0
+    },
+    "marks": [],
+    "name": "Alacritty",
+    "percent": 0.333333333333333,
+    "swallows": [
+       {
+       "class": "^Alacritty$",
+       "instance": "^Alacritty$",
+       "title": "^Alacritty$"
+       }
+    ],
+    "type": "con"
+}
+

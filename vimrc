@@ -71,8 +71,9 @@ filetype off                  " required
 
 call plug#begin('~/.vim/plugged')
 " Plug 'Shougo/deoplete.nvim'
-" Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
+" Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown'}
 
+Plug 'google/vim-jsonnet'
 Plug 'vim-scripts/ConflictMotions'
 " ]x                      Go to [count] next start of a conflict.
 " ]X                      Go to [count] next end of a conflict.

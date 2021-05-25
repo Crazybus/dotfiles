@@ -16,3 +16,4 @@ symlink zshrcfunctions ~/.zshrcfunctions
 symlink bin ~/bin
 symlink vimrc ~/.vimrc
 symlink kube-aliases.sh ~/.kube-aliases.sh
+symlink alacritty.yml ~/.config/alacritty/alacritty.yml

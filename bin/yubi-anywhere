@@ -1,5 +1,5 @@
 #!/bin/bash
 
-termite --exec 'sh -c "sleep 0.1 && yubi > ~/tmp/.yubi"'
+alacritty -e sh -c "sleep 0.1 && yubi > ~/tmp/.yubi"
 cat ~/tmp/.yubi | xclip -selection clipboard -in
 cat ~/tmp/.yubi | xclip -o -in

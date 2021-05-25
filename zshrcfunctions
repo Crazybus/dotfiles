@@ -1,5 +1,6 @@
 [[ $- != *i* ]] && return
 
+alias v.off="unset VAULT_ADDR"
 alias tw='bugwarrior-pull && vit'
 alias mt='offlineimap -q -a Elastic && mail.py && mutt'
 alias totp='v.prod && vault read --field=code "totp/code/$(vault list totp/keys | fzf)" | xclip -selection clipboard -in'
@@ -493,6 +494,10 @@ g.f() {
     vim $(git diff --name-only $(git merge-base origin/master HEAD) | fzf)
 }
 
+g.a() {
+    git add $(git status -s | awk '{print $2}' | fzf --multi --bind "ctrl-a:select-all+accept" | tr '\n' ' ')
+}
+
 g.c() {
     cd $(dirname $(git diff --name-only $(git merge-base origin/master HEAD) | fzf))
 }
@@ -502,7 +507,7 @@ g.pr() {
 }
 
 g.hosting() {
-    hub pull-request --copy --push --browse --labels area:hosting --reviewer $(gh api -X GET 'orgs/elastic/teams/infra-hosting/members' -F per_page=100 --paginate --cache 1h | jq -r '.[] | .login' | fzf --multi | tr '\n' ',') && sleep 15 && wpr $(pbpaste)
+    hub pull-request --copy --push --browse --labels area:hosting --reviewer $(gh api -X GET 'orgs/elastic/teams/infra-hosting/members' -F per_page=100 --paginate --cache 1h | jq -r '.[] | .login' | fzf --multi --bind "ctrl-a:select-all+accept" | tr '\n' ',') && sleep 15 && wpr $(pbpaste)
 }
 
 git-log() {
@@ -596,3 +601,11 @@ docs() {
 escurl() {
     curl -s -u $ES_USERNAME:$ES_PASSWORD $ES_ADDRESS/$1 | jq -r $2
 }
+
+
+function gcp.project {
+    gcloud config set project $(gcloud projects list | fzf | awk '{ print $1}')
+}
+
+alias gcp.default-auth="gcloud auth application-default login"
+alias gcp.off="gcloud config unset project"
