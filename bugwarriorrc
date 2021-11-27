@@ -1,5 +1,5 @@
 [general]
-targets = github_issues, github_pr, github_pulls, github_pulls_failed, github_pr_hosting
+targets = github_issues, github_pr, github_pulls, github_pulls_failed, github_pr_hosting, github_hosting_triage
 
 # Setting this to True will include a link to the ticket in the description
 inline_links = False
@@ -93,6 +93,20 @@ github.username = elastic
 [github_pr_hosting]
 github.description_template = RR; {{githubuser}}: {{githubtitle}}
 github.query = is:pr is:open -is:draft -author:Crazybus label:area:hosting -review-requested:Crazybus org:elastic -reviewed-by:@me 
+
+service = github
+github.default_priority = L
+github.include_repos = infra
+github.include_user_issues = False
+github.include_user_repos = False
+github.login = Crazybus
+github.password = @oracle:eval:cat /home/mick/.github_token
+github.username = elastic
+
+# Triage
+[github_hosting_triage]
+github.description_template = TRIAGE; {{githubtitle}}
+github.query = is:issue -label:priority:critical -label:priority:necessary -label:priority:roadmap -label:priority:backlog label:area:hosting created:>=2021-07-12
 
 service = github
 github.default_priority = L

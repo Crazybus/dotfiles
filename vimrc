@@ -32,7 +32,7 @@ set t_vb=
 set tm=500
 set ul=100
 set pastetoggle=<F2>
-set clipboard=unnamed,unnamedplus
+set clipboard=unnamed
 nmap <F1> :diffg LO <CR> " LOCAL
 nmap <F2> :diffg BA <CR> " BASE
 nmap <F3> :diffg RE <CR> " REMOTE
@@ -263,8 +263,8 @@ let g:deoplete#enable_at_startup = 1
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
-" autocmd BufWritePre *.py execute ':Black'
-" autocmd FileType python autocmd BufWritePre <buffer> execute ':Black'
+autocmd BufWritePre *.py execute ':Black'
+autocmd FileType python autocmd BufWritePre <buffer> execute ':Black'
 
 
 " Markdown

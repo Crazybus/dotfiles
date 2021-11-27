@@ -443,6 +443,10 @@ gb() {
    git pull --rebase origin master
 }
 
+g.b() {
+  git checkout $(git branch | fzf)
+}
+
 gp() {
    git pull --rebase origin master
 }
@@ -498,16 +502,40 @@ g.a() {
     git add $(git status -s | awk '{print $2}' | fzf --multi --bind "ctrl-a:select-all+accept" | tr '\n' ' ')
 }
 
+g.d() {
+  git diff ..origin/master 
+}
+
 g.c() {
     cd $(dirname $(git diff --name-only $(git merge-base origin/master HEAD) | fzf))
 }
 
 g.pr() {
-    gh pr checkout $(gh pr list --limit 200 | fzf | awk '{ print $1}' )
+    gh pr checkout --force $(gh pr list --limit 200 | fzf | awk '{ print $1}' )
 }
 
 g.hosting() {
     hub pull-request --copy --push --browse --labels area:hosting --reviewer $(gh api -X GET 'orgs/elastic/teams/infra-hosting/members' -F per_page=100 --paginate --cache 1h | jq -r '.[] | .login' | fzf --multi --bind "ctrl-a:select-all+accept" | tr '\n' ',') && sleep 15 && wpr $(pbpaste)
+}
+
+g.issue() {
+  gh issue view --web $(gh issue list --limit 1000 --label area:hosting --json number --json title --json updatedAt | jq -r ".[] | [.number, .updatedAt, .title] | @tsv" | fzf --no-sort --preview "gh issue view \$(echo {} | cut -f1)" | cut -f1)
+}
+
+g.issueall() {
+  gh issue view --web $(gh issue list --limit 1000 --json number --json title --json updatedAt | jq -r ".[] | [.number, .updatedAt, .title] | @tsv" | fzf --no-sort --preview "gh issue view \$(echo {} | cut -f1)" | cut -f1)
+}
+
+g.merge() {
+  pr=$(gh pr status --jq '.createdBy[] | select ( .reviewDecision == "APPROVED" )' --json title,number,reviewDecision | fzf)
+  
+  echo "Merge PR? $(echo $pr | jq .title)"
+  read input
+  if [ $input != "y" ]; then
+    break
+  fi
+  
+  gh pr merge --merge --delete-branch $(echo $pr | jq .number)
 }
 
 git-log() {
@@ -599,7 +627,7 @@ docs() {
 }
 
 escurl() {
-    curl -s -u $ES_USERNAME:$ES_PASSWORD $ES_ADDRESS/$1 | jq -r $2
+    curl -s -u $ES_USERNAME:$ES_PASSWORD $ES_ADDRESS/$1
 }
 
 

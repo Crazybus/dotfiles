@@ -1,0 +1,3 @@
+#!/bin/bash
+
+gron --stream <&0 | rg -v '= \{};|= \[];'

@@ -1,11 +1,14 @@
 [include]
 path = ~/.gitconfig.local
-[diff]
-tool = icdiff
+
+[pager]
+    diff = delta --diff-so-fancy
+    log = delta --diff-so-fancy
+    reflog = delta --diff-so-fancy
+    show = delta --diff-so-fancy
+
 [difftool]
 prompt = false
-[difftool "icdiff"]
-cmd = /usr/local/bin/icdiff --line-numbers $LOCAL $REMOTE
 [push]
 default = nothing
 followTags = true
@@ -63,3 +66,9 @@ keepBackup = false
 #    old = black red strike
 #    new = black green strike
 #    #context = black # context (ie: unchanged lines) text
+
+[delta]
+  navigate = true
+
+[interactive]
+    diffFilter = delta --color-only

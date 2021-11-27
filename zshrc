@@ -71,12 +71,14 @@ if [ ! -S ~/.ssh/ssh_auth_sock ]; then
 fi
 export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 ssh-add -l > /dev/null || ssh-add
-export TERM=xterm
+export TERM=tmux-256color
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/mick/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/home/mick/Downloads/google-cloud-sdk/path.zsh.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/home/mick/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/mick/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
-
+#if [ -f '/home/mick/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/home/mick/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+#
+## The next line enables shell command completion for gcloud.
+#if [ -f '/home/mick/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/mick/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+#
 export BAT_THEME="Solarized (dark)"
+
+export PATH="${PATH}:${HOME}/.krew/bin"

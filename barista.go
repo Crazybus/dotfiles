@@ -33,7 +33,6 @@ import (
 	"barista.run/modules/battery"
 	"barista.run/modules/clock"
 	"barista.run/modules/diskspace"
-	"barista.run/modules/funcs"
 	"barista.run/modules/meminfo"
 	"barista.run/modules/shell"
 	"barista.run/modules/sysinfo"
@@ -211,16 +210,16 @@ func main() {
 			return outputs.Textf("%s", count).OnClick(click.RunLeft("xdg-open", "https://elastic.pagerduty.com/schedules#PBCOHVC"))
 		}))
 
-	barista.Add(funcs.Every(5*time.Minute, func(s bar.Sink) {
-		output, running, err := togglWeekly()
-		if err == nil {
-			if running {
-				s.Output(outputs.Text(output).Color(colors.Scheme("good")))
-			} else {
-				s.Output(outputs.Text(output).Color(colors.Scheme("bad")))
-			}
-		}
-	}))
+	//barista.Add(funcs.Every(5*time.Minute, func(s bar.Sink) {
+	//	output, running, err := togglWeekly()
+	//	if err == nil {
+	//		if running {
+	//			s.Output(outputs.Text(output).Color(colors.Scheme("good")))
+	//		} else {
+	//			s.Output(outputs.Text(output).Color(colors.Scheme("bad")))
+	//		}
+	//	}
+	//}))
 
 	barista.Add(diskspace.New("/").Output(func(i diskspace.Info) bar.Output {
 		out := outputs.Text(format.IBytesize(i.Available))

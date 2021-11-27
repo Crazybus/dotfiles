@@ -21,3 +21,10 @@ for pod in pods["items"]:
         print(
             f"-n {pod['metadata']['namespace']} {pod['metadata']['name']} -c {c['name']}"
         )
+
+    if "initContainers" in pod["spec"]:
+        for c in pod["spec"]["initContainers"]:
+            container_name = c["name"]
+            print(
+                f"-n {pod['metadata']['namespace']} {pod['metadata']['name']} -c {c['name']}"
+            )

@@ -36,7 +36,7 @@ bindsym $mod+Shift+p exec flameshot gui
 
 bindsym $mod+Shift+g exec ~/bin/google
 
-bindsym $mod+Shift+t exec ~/bin/toggl_toggle.sh
+#bindsym $mod+Shift+t exec ~/bin/toggl_toggle.sh
 
 # change focus
 bindsym $mod+h focus left
