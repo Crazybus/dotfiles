@@ -206,3 +206,17 @@ c.kibana.legacy() {
 c.bad.nodes() {
   xdg-open "https://$(kubectl get ingress --namespace elastic-apps kibana -o jsonpath='{.spec.rules[0].host}')/app/metrics/explorer?_g=()&metricsExplorer=(chartOptions:(stack:!f,type:line,yAxisMode:fromZero),options:(aggregation:count,filterQuery:'kubernetes.node.status.ready : "false" ',groupBy:kubernetes.node.name,metrics:!((aggregation:count))),timerange:(from:now-8h,interval:>%3D10s,to:now))"
 }
+
+c.util.pods() {
+    kubectl resource-capacity --util --pods --sort cpu.util | \
+    awk '{ print $2, $3, $8, $4, $6}' | \
+    rg -v '^\*|^NAMESPACE' | \
+    rg $1 | \
+    sort | \
+    column -t
+}
+
+c.ctx() {
+    export KUBECONFIG="$(k8s_config_isolate.py)"
+    c.ns
+}

@@ -82,3 +82,8 @@ export TERM=tmux-256color
 export BAT_THEME="Solarized (dark)"
 
 export PATH="${PATH}:${HOME}/.krew/bin"
+# eval "$(pyenv init -)"
+#
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init --path)"

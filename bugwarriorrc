@@ -1,5 +1,5 @@
 [general]
-targets = github_issues, github_pr, github_pulls, github_pulls_failed, github_pr_hosting, github_hosting_triage
+targets = github_issues, github_pr, github_pulls, github_pulls_failed
 
 # Setting this to True will include a link to the ticket in the description
 inline_links = False

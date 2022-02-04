@@ -94,10 +94,10 @@ vault_info(){
 }
 
 kube_info(){
-    current=$(cat ~/.kube/config | grep current-context | awk '{ print $2 }')
+    current=$(cat ${KUBECONFIG:-~/.kube/config} | grep current-context | awk '{ print $2 }')
 
     if [[ "$current" != '""' ]]; then
-        namespace=$(cat ~/.kube/config | grep -A1 "cluster: $current" | grep namespace | awk '{print $2}')
+        namespace=$(cat ${KUBECONFIG:-~/.kube/config} | grep -A1 "cluster: $current" | grep namespace | awk '{print $2}')
         cluster=$(echo $current | sed 's/gke_.*_//')
         echo " $cluster/$namespace"
     fi

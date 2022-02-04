@@ -105,6 +105,8 @@ Plug 'venantius/vim-cljfmt'
 Plug 'tpope/vim-fireplace'
 Plug 'tpope/vim-salve'
 Plug 'sfiera/vim-emacsmodeline'
+Plug 'smbl64/vim-black-macchiato'
+
 call plug#end()
 
 
@@ -263,6 +265,7 @@ let g:deoplete#enable_at_startup = 1
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 
+let g:black_quiet = 1
 autocmd BufWritePre *.py execute ':Black'
 autocmd FileType python autocmd BufWritePre <buffer> execute ':Black'
 
@@ -272,3 +275,11 @@ let g:instant_markdown_slow = 1
 au FileType markdown nmap <F10> :call kutsan#ftplugin#markdownpreview()<Enter>
 let g:vim_markdown_follow_anchor = 1
 let g:vim_markdown_folding_disabled = 1
+
+nmap <buffer> <leader>gd <Plug>(coc-definition)
+nmap <buffer> <leader>gr <Plug>(coc-references)
+
+nnoremap <C-s> :Rg<Cr>
+
+autocmd FileType python xmap <buffer> <Leader>f <plug>(BlackMacchiatoSelection)
+let mapleader = " " " map leader to Space

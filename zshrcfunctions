@@ -637,3 +637,8 @@ function gcp.project {
 
 alias gcp.default-auth="gcloud auth application-default login"
 alias gcp.off="gcloud config unset project"
+
+function g.repo.admins {
+    repo=$1
+    gh api --paginate  /repos/$repo/teams | jq -r '.[] | [.permissions.admin, .name] | @tsv' | awk '/true/{print $2}'
+}
