@@ -9,6 +9,14 @@ autoload -Uz promptinit
 promptinit
 source ~/pro/dotfiles/prompt_crazybus_setup
 
+export HISTFILE=~/.zsh_history
+setopt INC_APPEND_HISTORY
+setopt EXTENDED_HISTORY
+export HISTTIMEFORMAT="[%F %T] "
+export HISTFILESIZE=1000000000
+export HISTSIZE=1000000000
+export SAVEHIST=1000000000
+
 source ~/.creds_local
 export EDITOR=vim
 export VISUAL=vim
@@ -42,15 +50,6 @@ export NOTI_DEFAULT="banner pushbullet"
 
 export RIPGREP_CONFIG_PATH=~/.rg
 
-if test -f ~/.gnupg/.gpg-agent-info -a -n "$(pgrep gpg-agent)"; then
-  source ~/.gnupg/.gpg-agent-info
-  export GPG_AGENT_INFO
-  GPG_TTY=$(tty)
-  export GPG_TTY
-else
-  (eval $(gpg-agent --daemon --write-env-file ~/.gnupg/.gpg-agent-info)) > /dev/null 2>&1
-fi
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 [[ -s "/Users/mick/.gvm/scripts/gvm" ]] && source "/Users/mick/.gvm/scripts/gvm"
@@ -71,7 +70,8 @@ if [ ! -S ~/.ssh/ssh_auth_sock ]; then
 fi
 export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 ssh-add -l > /dev/null || ssh-add
-export TERM=tmux-256color
+# export TERM=tmux-256color
+export TERM=xterm-256color
 
 # The next line updates PATH for the Google Cloud SDK.
 #if [ -f '/home/mick/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/home/mick/Downloads/google-cloud-sdk/path.zsh.inc'; fi
@@ -86,4 +86,12 @@ export PATH="${PATH}:${HOME}/.krew/bin"
 #
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
+# eval "$(pyenv init --path)"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/mick/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/mick/Downloads/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/mick/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/mick/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+
+. /opt/homebrew/opt/asdf/libexec/asdf.sh

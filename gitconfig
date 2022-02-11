@@ -19,7 +19,7 @@ clean = git-lfs clean %f
 [credential]
 helper = osxkeychain
 [core]
-excludesfile = /home/mick/.gitignore_global
+excludesfile = ~/.gitignore_global
 pager = less -r
 [remote "origin"]
 fetch = +refs/pull/*/head:refs/remotes/origin/pr/*
@@ -49,7 +49,7 @@ showUntrackedFiles = all
 gpgsign = true
 verbose = true
 [gpg]
-program = /usr/bin/gpg
+program = gpg
 [mergetool "diffconflicts"]
 cmd = diffconflicts vim $BASE $LOCAL $REMOTE $MERGED
 trustExitCode = true

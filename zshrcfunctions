@@ -2,7 +2,8 @@
 
 alias v.off="unset VAULT_ADDR"
 alias tw='bugwarrior-pull && vit'
-alias mt='offlineimap -q -a Elastic && mail.py && mutt'
+#alias mt='offlineimap -q -a Elastic && mail.py && mutt'
+alias mt='offlineimap -q -a Elastic && mutt'
 alias totp='v.prod && vault read --field=code "totp/code/$(vault list totp/keys | fzf)" | xclip -selection clipboard -in'
 alias glow="glow -s ~/pro/dotfiles/glow.json -p $1"
 alias grepr=gr
@@ -641,4 +642,9 @@ alias gcp.off="gcloud config unset project"
 function g.repo.admins {
     repo=$1
     gh api --paginate  /repos/$repo/teams | jq -r '.[] | [.permissions.admin, .name] | @tsv' | awk '/true/{print $2}'
+}
+
+function p.i {
+    sudo port install $(port search $1 | fzf | awk '{ print $1}')
+
 }

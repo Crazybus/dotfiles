@@ -41,7 +41,7 @@ github.include_repos = infra
 github.include_user_issues = False
 github.include_user_repos = False
 github.login = Crazybus
-github.password = @oracle:eval:cat /home/mick/.github_token
+github.password = @oracle:eval:cat ~/.github_token
 github.username = elastic
 
 # My PRs
@@ -55,7 +55,7 @@ github.include_repos = infra
 github.include_user_issues = False
 github.include_user_repos = False
 github.login = Crazybus
-github.password = @oracle:eval:cat /home/mick/.github_token
+github.password = @oracle:eval:cat ~/.github_token
 github.username = elastic
 
 
@@ -70,7 +70,7 @@ github.include_repos = infra
 github.include_user_issues = False
 github.include_user_repos = False
 github.login = Crazybus
-github.password = @oracle:eval:cat /home/mick/.github_token
+github.password = @oracle:eval:cat ~/.github_token
 github.username = elastic
 
 
@@ -85,7 +85,7 @@ github.include_repos = infra
 github.include_user_issues = False
 github.include_user_repos = False
 github.login = Crazybus
-github.password = @oracle:eval:cat /home/mick/.github_token
+github.password = @oracle:eval:cat ~/.github_token
 github.username = elastic
 
 
@@ -100,7 +100,7 @@ github.include_repos = infra
 github.include_user_issues = False
 github.include_user_repos = False
 github.login = Crazybus
-github.password = @oracle:eval:cat /home/mick/.github_token
+github.password = @oracle:eval:cat ~/.github_token
 github.username = elastic
 
 # Triage
@@ -114,5 +114,5 @@ github.include_repos = infra
 github.include_user_issues = False
 github.include_user_repos = False
 github.login = Crazybus
-github.password = @oracle:eval:cat /home/mick/.github_token
+github.password = @oracle:eval:cat ~/.github_token
 github.username = elastic

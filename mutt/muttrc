@@ -10,14 +10,19 @@ source ~/.mutt/account-specific-settings
 
 set delete = yes
 unset confirmappend
+# macro index,pager 1 "<save-message>=now<enter>"
+#macro index,pager 1 "<save-message>=today<enter>"
+# macro index,pager 3 "<save-message>=tomorrow<enter>"
+#macro index,pager 2 "<save-message>=someday<enter>"
 
 macro index,pager g1 "<change-folder>=today<enter><enter-command>exec collapse-all<enter>"
 macro index,pager g2 "<change-folder>=someday<enter><enter-command>exec collapse-all<enter>"
 
 macro pager,attach B "<pipe-message>cat > /tmp/mutt.html; open /tmp/mutt.html<enter>"
-macro index,pager,attach p "<pipe-message>~/bin/open-pr.sh<enter>"
+macro index,pager,attach o "<pipe-message>~/bin/open-pr.sh<enter>"
+macro index,pager,attach p "<pipe-message>~/bin/github-mail-diff.py<enter>"
 macro index,pager,attach t "<pipe-message>~/bin/add-task-warrior ''<enter>"
-macro index,pager,attach 1 "<pipe-message>~/bin/add-task-warrior now<enter>"
+macro index,pager,attach 1 "<pipe-message>~/bin/add-task-warrior ''<enter>"
 macro index,pager,attach 2 "<pipe-message>~/bin/add-task-warrior 16:00<enter>"
 macro index,pager,attach 3 "<pipe-message>~/bin/add-task-warrior 2d<enter>"
 macro index,pager,attach 4 "<pipe-message>~/bin/add-task-warrior 7d<enter>"
@@ -26,12 +31,16 @@ set move = no
 bind index - collapse-thread
 bind index _ collapse-all
 
-macro index,pager         U       "<sync-mailbox>"
+#macro index,pager         u       "<sync-mailbox>"
+#macro index,pager         U       "<sync-mailbox>"
+macro index,pager         w       "<sync-mailbox>"
+macro index,pager         W       "<sync-mailbox>"
 
 # Gmail-style keyboard shortcuts
 macro index,pager ga "<change-folder>=archive<tab><enter>" "Go to all mail"
 macro index,pager gi "<change-folder>=inbox<enter><enter-command>exec collapse-all<enter>" "Go to inbox"
 macro index,pager gs "<change-folder>=sent<enter>" "Go to sent"
+macro index,pager gb "<change-folder>=spam<enter>" "Go to spam"
 
 auto_view text/html                                      # view html automatically
 alternative_order text/plain text/enriched text/html     # save html for last
@@ -45,6 +54,7 @@ macro index,pager b "<pipe-message> urlscan --compact --dedupe<Enter>" "call url
 source ~/.mutt/vim
 source ~/.mutt/theme
 
+macro index,pager m '<enter-command>set pipe_sep="\n_PIPE_SEP_\n"<enter><pipe-message>gmute<enter><sync-mailbox>'
 macro index s "<enter-command>unset wait_key<enter><shell-escape>mutt-notmuch-py ~/.mail/elastic/temporary/search<enter><change-folder-readonly>+temporary/search<enter>" "search mail (using notmuch)"
 
 
@@ -86,7 +96,7 @@ hdr_order subject: status: users: date: cc: to: from: # and in this order
 set date_format = "%d.%m.%y %H:%M"
 set index_format = "[%Z]  %D  %-20.20F  %s"
 set sort = threads                         # like gmail
-set sort_aux = date-received          # like gmail
+set sort_aux = last-date-received          # like gmail
 set sort_re                                # thread based on regex
 set reply_regexp = "^(([Rr][Ee]?(\[[0-9]+\])?: *)?(\[[^]]+\] *)?)*"
 

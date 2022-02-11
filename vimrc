@@ -85,6 +85,7 @@ Plug 'vim-scripts/CountJump'     " dep for conflict motions
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf'
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 "Plug 'Align'
 Plug 'junegunn/vim-easy-align'
