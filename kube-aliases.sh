@@ -1,6 +1,10 @@
 alias k=kubectl
 c.events() {
-  kubectl get events --all-namespaces -w  | grep '$1'
+  kubectl get events --sort-by lastTimestamp
+}
+
+c.eventsw() {
+  kubectl get events -w
 }
 
 c.bad() {
@@ -12,7 +16,7 @@ c.oom() {
 }
 
 c.temp() {
-  kubectl run --generator=run-pod/v1 --rm -ti micky-temp-$(date +%s) --image=crazybus/dtk --image-pull-policy=Always --rm --command=true --attach=true /bin/sh
+  kubectl run --rm -ti micky-temp-$(date +%s) --image=crazybus/dtk --image-pull-policy=Always --rm --command=true --attach=true /bin/sh
 }
 
 c.ns() {
@@ -218,5 +222,5 @@ c.util.pods() {
 
 c.ctx() {
     export KUBECONFIG="$(k8s_config_isolate.py)"
-    c.ns
+    kubectl config set-context --current --namespace=elastic-apps
 }

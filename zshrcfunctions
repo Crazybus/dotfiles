@@ -1,10 +1,10 @@
 [[ $- != *i* ]] && return
 
 alias v.off="unset VAULT_ADDR"
-alias tw='bugwarrior-pull && vit'
+alias tw='bugwarrior-pull > /dev/null 2>&1 | grep CRITICAL || vit'
 #alias mt='offlineimap -q -a Elastic && mail.py && mutt'
 alias mt='offlineimap -q -a Elastic && mutt'
-alias totp='v.prod && vault read --field=code "totp/code/$(vault list totp/keys | fzf)" | xclip -selection clipboard -in'
+alias totp='v.prod && vault read --field=code "totp/code/$(vault list totp/keys | fzf)" | pbcopy'
 alias glow="glow -s ~/pro/dotfiles/glow.json -p $1"
 alias grepr=gr
 alias lansible="lope ansible:1.0.0 ansible-playbook $*"
@@ -51,12 +51,8 @@ function unseal() {
   done
 }
 
-function me () {
-    echo "Subject: $@\n\n$@" | msmtp -a micky micky@elastic.co
-}
-
 fuction wpr () {
-    noti pratus $1
+    noti gh pr checks --watch $1
 }
 
 function ks () {
@@ -419,16 +415,6 @@ export VISUAL=vim
 ### Source local file for any special changes ###
 source ~/.kube-aliases.sh
 
-alias assh="v.prod && cd ~/pro/infra/ansible && ssh -F ./ssh_config $1"
-alias issh="workon master && cd ansible && ./connect-to $1"
-
-bssh() {
-    host="$1"
-    args="${@:2}"
-    cd ~/pro/master/ansible
-    vault ssh -role bastion -mode otp $@ -F ./ssh_config
-}
-
 gssh() {
     host=$(gron ~/.ansible/tmp/cache/production/ansible-ec2.cache | grep "$1" | gron -ungron | jq -r "._meta.hostvars | keys | first")
     cd ~/pro/infra/ansible && ssh -F ./ssh_config $host
@@ -439,9 +425,10 @@ yk() {
 }
 
 gb() {
-   git checkout -b $1 master
+   branch=$(git branch -l master main | sed 's/^* //' | sed 's/ //g')
+   git checkout -b $1 $branch
    git reset --hard HEAD; git clean -ffd
-   git pull --rebase origin master
+   git pull --rebase origin $branch
 }
 
 g.b() {
@@ -449,7 +436,8 @@ g.b() {
 }
 
 gp() {
-   git pull --rebase origin master
+   branch=$(git branch -l master main | sed 's/^* //' | sed 's/ //g')
+   git pull --rebase origin $branch
 }
 
 remark() {
@@ -476,13 +464,6 @@ c() {
     else
         cd $(dirname "$dir")
     fi
-}
-
-idoc() {
-    doc=$(find /home/mick/pro/master/docs | fzf | sed 's;/home/mick/pro/master/;https://github.com/elastic/infra/tree/master/;')
-    echo Doc: $doc
-    echo $doc | pbcopy
-    xdg-open $doc
 }
 
 cdproject() {
@@ -513,10 +494,6 @@ g.c() {
 
 g.pr() {
     gh pr checkout --force $(gh pr list --limit 200 | fzf | awk '{ print $1}' )
-}
-
-g.hosting() {
-    hub pull-request --copy --push --browse --labels area:hosting --reviewer $(gh api -X GET 'orgs/elastic/teams/infra-hosting/members' -F per_page=100 --paginate --cache 1h | jq -r '.[] | .login' | fzf --multi --bind "ctrl-a:select-all+accept" | tr '\n' ',') && sleep 15 && wpr $(pbpaste)
 }
 
 g.issue() {
@@ -636,6 +613,10 @@ function gcp.project {
     gcloud config set project $(gcloud projects list | fzf | awk '{ print $1}')
 }
 
+function gcp.gke.creds {
+    gcloud container clusters get-credentials $(gcloud container clusters list | fzf | awk '{ print $1 " --region " $2 }')
+}
+
 alias gcp.default-auth="gcloud auth application-default login"
 alias gcp.off="gcloud config unset project"
 
@@ -647,4 +628,54 @@ function g.repo.admins {
 function p.i {
     sudo port install $(port search $1 | fzf | awk '{ print $1}')
 
+}
+
+function w.ls {
+  w.cdroot
+  git worktree list
+}
+
+function w.clean {
+  w.cdroot
+  gp
+  git worktree list | while read tree; do
+    branch=${tree##*/}
+    branch=$(echo $branch | awk '{ print $1 }')
+    dir=$(echo $tree | awk '{ print $1 }')
+    git branch --merged | grep "$branch$" && echo removing $dir && mv "$dir" ~/tmp/worktree-backup/
+    git worktree prune --verbose
+  done
+}
+
+function w.add {
+  w.cdroot
+  git checkout main
+  gp
+  git worktree add ../$1
+  cd ../$1
+}
+
+function w.cdroot {
+    cd ~/pro/firelink
+}
+
+function w.cd {
+  w.cdroot
+  cd $(git worktree list | fzf | awk '{ print $1 }')
+}
+
+
+function w.rm {
+  w.cdroot
+  worktree=$(git worktree list | fzf | awk '{ print $1 }')
+  echo -n "Remove $worktree?"
+  read test
+
+  git worktree remove $worktree
+}
+
+function g.w {
+  id=$(gh run list | fzf | rev | awk '{ print $3 }' | rev)
+  gh run watch $id
+  gh run view $id --log-failed
 }

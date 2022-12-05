@@ -13,8 +13,8 @@ wait = false
 
 [keybinding]
 
-o = :!wr /home/mick/bin/task-pr.sh {TASK_UUID} <Enter>
-p = :!wr /home/mick/bin/task-pr-diff.sh {TASK_UUID} <Enter>
+o = :!wr /Users/mick/bin/task-pr.sh {TASK_UUID} <Enter>
+p = :!wr /Users/mick/bin/task-pr-diff.sh {TASK_UUID} <Enter>
 
 w1 = :!wr task {TASK_UUID} modify due:now<Enter>
 w2 = :!wr task {TASK_UUID} modify due:16:00<Enter>
@@ -30,8 +30,8 @@ wq = :!wr task {TASK_UUID} modify wait:<Enter>
 3 = :!wr sh -c "echo n | task {TASK_UUID} modify wait:2d"<Enter>
 4 = :!wr sh -c "echo n | task {TASK_UUID} modify wait:7d"<Enter>
 5 = :!wr sh -c "echo n | task {TASK_UUID} modify wait:1month"<Enter>
-wd = :!wr /home/mick/bin/wait-one-day-github {TASK_UUID}<Enter>
-V = :!wr /home/mick/bin/task-to-gmail {TASK_UUID}<Enter>
+wd = :!wr /Users/mick/bin/wait-one-day-github {TASK_UUID}<Enter>
+V = :!wr /Users/mick/bin/task-to-gmail {TASK_UUID}<Enter>
 
 6 = :list RR;<Enter>
 s = {ACTION_TASK_START_STOP}

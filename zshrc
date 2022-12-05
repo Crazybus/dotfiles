@@ -9,6 +9,7 @@ autoload -Uz promptinit
 promptinit
 source ~/pro/dotfiles/prompt_crazybus_setup
 
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
 export HISTFILE=~/.zsh_history
 setopt INC_APPEND_HISTORY
 setopt EXTENDED_HISTORY
@@ -41,6 +42,7 @@ export PATH=$PATH:~/go/bin
 export PATH=$PATH:/opt/local/sbin
 export PATH=$PATH:/opt/local/bin
 export PATH=$PATH:~/.local/bin
+export PATH=$PATH:~/.rd/bin
 alias nix='nix-shell . --command "zsh"'
 
 export eap=elastic-apps-163815
@@ -95,3 +97,5 @@ if [ -f '/Users/mick/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/
 if [ -f '/Users/mick/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/mick/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
 
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
+
+cd $(cat ~/tmp/whereami || echo "~")
